@@ -1,0 +1,4084 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1A56DB">
+<!-- iOS 全屏 App 模式 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="背单词">
+<title>考研闪过 · 背单词</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231A56DB'/%3E%3Ctext x='32' y='44' font-size='32' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3EW%3C/text%3E%3C/svg%3E">
+<!-- iOS 主屏图标 -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%231A56DB'/%3E%3Ctext x='90' y='120' font-size='88' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3EW%3C/text%3E%3C/svg%3E">
+<!-- PWA manifest（data URI 内嵌） -->
+<link rel="manifest" href='data:application/manifest+json,%7B%22name%22%3A%22%E8%80%83%E7%A0%94%E9%97%AA%E8%BF%87%E8%83%8C%E5%8D%95%E8%AF%8D%22%2C%22short_name%22%3A%22%E8%83%8C%E5%8D%95%E8%AF%8D%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f7f8fa%22%2C%22theme_color%22%3A%22%231A56DB%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data:image%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%2527%2520viewBox%253D%25270%25200%2520512%2520512%2527%253E%253Crect%2520width%253D%2527512%2527%2520height%253D%2527512%2527%2520rx%253D%2527112%2527%2520fill%253D%2527%25231A56DB%2527%252F%253E%253Ctext%2520x%253D%2527256%2527%2520y%253D%2527340%2527%2520font-size%253D%2527240%2527%2520text-anchor%253D%2527middle%2527%2520fill%253D%2527white%2527%2520font-family%253D%2527sans-serif%2527%2520font-weight%253D%2527bold%2527%253EW%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%22%7D%5D%7D'>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f7f8fa;
+    color: #1f2937;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .app {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+    min-height: 100vh;
+  }
+
+  /* ===== 顶部栏 ===== */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .back-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  .back-btn:hover { background: #eef0f3; color: #1f2937; }
+  .progress-badge {
+    font-size: 14px;
+    color: #6b7280;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-badge b { color: #1A56DB; font-weight: 600; }
+
+  /* ===== 标题 ===== */
+  .hero { text-align: center; margin: 24px 0 32px; }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1A56DB;
+    letter-spacing: 0.5px;
+  }
+  .hero p {
+    margin-top: 8px;
+    color: #888;
+    font-size: 14px;
+  }
+
+  /* ===== 卡片 ===== */
+  .card-grid { display: flex; flex-direction: column; gap: 12px; }
+  .card-grid.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 12px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card:hover {
+    border-color: #1A56DB;
+    box-shadow: 0 2px 8px rgba(26,86,219,.08);
+    transform: translateY(-1px);
+  }
+  .card .label { font-size: 17px; font-weight: 600; }
+  .card .sub { font-size: 13px; color: #888; margin-top: 3px; }
+  .card .arrow { color: #c0c4cc; font-size: 18px; }
+
+  /* 模式大卡片（首页两个入口） */
+  .mode-card {
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 16px;
+    padding: 28px 22px;
+    cursor: pointer;
+    transition: all .15s ease;
+    text-align: center;
+  }
+  .mode-card:hover {
+    border-color: #1A56DB;
+    box-shadow: 0 4px 14px rgba(26,86,219,.12);
+    transform: translateY(-2px);
+  }
+  .mode-card .icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .mode-card .label { font-size: 18px; font-weight: 700; color: #111827; }
+  .mode-card .sub { font-size: 13px; color: #888; margin-top: 6px; }
+
+  /* ===== 拼写视图 ===== */
+  .quiz-card {
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 16px;
+    padding: 36px 28px;
+    text-align: center;
+  }
+  .quiz-cn {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+    min-height: 32px;
+  }
+  .quiz-hint {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 28px;
+  }
+  .quiz-input {
+    width: 100%;
+    font-size: 22px;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    text-align: center;
+    outline: none;
+    transition: border-color .15s;
+    font-family: "Times New Roman", Georgia, serif;
+    letter-spacing: 0.5px;
+  }
+  .quiz-input:focus { border-color: #1A56DB; }
+  .quiz-input.correct { border-color: #16a34a; background: #f0fdf4; }
+  .quiz-input.wrong { border-color: #dc2626; background: #fef2f2; }
+
+  /* 倒计时进度条 */
+  .timer-bar {
+    width: 100%;
+    height: 6px;
+    background: #eef0f3;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .timer-fill {
+    height: 100%;
+    background: #1A56DB;
+    width: 100%;
+  }
+  .timer-fill.warning { background: #f59e0b; }
+  .timer-fill.danger { background: #dc2626; }
+  @keyframes shrink {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+
+  .next-btn {
+    margin-top: 18px;
+    padding: 10px 32px;
+    background: #1A56DB;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .next-btn:hover { background: #1547b8; }
+
+  /* 模态确认弹窗 */
+  .modal-mask {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px 22px;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+  }
+  .modal-box h3 { font-size: 17px; margin-bottom: 8px; }
+  .modal-box p { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+  .modal-btns { display: flex; gap: 10px; }
+  .modal-btns button {
+    flex: 1;
+    padding: 11px 0;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+  }
+  .modal-cancel { background: #f0f1f3; color: #374151; }
+  .modal-cancel:hover { background: #e5e7eb; }
+  .modal-ok { background: #dc2626; color: #fff; }
+  .modal-ok:hover { background: #b91c1c; }
+
+  .feedback {
+    margin-top: 20px;
+    min-height: 56px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .feedback.ok { color: #16a34a; }
+  .feedback.no { color: #dc2626; }
+  .feedback .right-ans {
+    display: block;
+    font-size: 15px;
+    font-weight: 400;
+    color: #16a34a;
+    margin-top: 6px;
+    font-family: "Times New Roman", Georgia, serif;
+  }
+
+  /* ===== 错题回顾 ===== */
+  .review-title {
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .review-sub {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  table.review {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eceef1;
+    font-size: 14px;
+  }
+  table.review th, table.review td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #f0f1f3;
+  }
+  table.review th {
+    background: #fafbfc;
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  table.review tr:last-child td { border-bottom: none; }
+  .ans-wrong { color: #dc2626; text-decoration: line-through; opacity: .8; }
+  .ans-right { color: #16a34a; font-weight: 600; font-family: "Times New Roman", Georgia, serif; }
+
+  .btn-primary {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 14px;
+    background: #1A56DB;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-primary:hover { background: #1547b8; }
+
+  /* ===== 完成页 ===== */
+  .done-card { text-align: center; padding: 60px 20px; }
+  .done-check {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #fff;
+    font-size: 40px;
+    line-height: 72px;
+    margin: 0 auto 20px;
+  }
+  .done-card h2 { font-size: 24px; margin-bottom: 8px; }
+  .done-card p { color: #888; font-size: 14px; }
+
+  /* ===== 单词表视图 ===== */
+  .wl-toolbar {
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #6b7280;
+    text-align: center;
+  }
+  .wordlist-cols {
+    column-count: 2;
+    column-gap: 24px;
+  }
+  @media (max-width: 600px) {
+    .wordlist-cols { column-count: 1; }
+  }
+  .wl-item {
+    break-inside: avoid;
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+  .wl-en {
+    font-family: "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1A56DB;
+    cursor: pointer;
+    user-select: none;
+    transition: color .1s;
+  }
+  .wl-en:hover { text-decoration: underline; }
+  .wl-en.speaking {
+    color: #dc2626;
+    background: #fef2f2;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .wl-phon {
+    font-family: "Times New Roman", Georgia, serif;
+    font-size: 13px;
+    color: #666;
+    margin-left: 6px;
+  }
+  .wl-cn {
+    font-size: 13.5px;
+    color: #374151;
+    margin-top: 3px;
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 视图：主入口 ===== -->
+  <div id="view-home">
+    <div class="hero">
+      <h1>考研闪过 · 背单词</h1>
+      <p>选择你要做的事</p>
+    </div>
+    <div class="card-grid two-col">
+      <div class="mode-card" onclick="enterMode('quiz')">
+        <span class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+        <div class="label">单词检测</div>
+        <div class="sub">中译英拼写练习</div>
+      </div>
+      <div class="mode-card" onclick="enterMode('wordlist')">
+        <span class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+        <div class="label">单词表</div>
+        <div class="sub">浏览单词 + 点读发音</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 视图：选 WordList ===== -->
+  <div id="view-wl" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">← 返回</button>
+      <span></span>
+    </div>
+    <div class="hero" style="margin-top:0;">
+      <h1 id="wl-title">选择 Word List</h1>
+      <p id="wl-sub">点击进入</p>
+    </div>
+    <div class="card-grid" id="wl-list"></div>
+  </div>
+
+  <!-- ===== 视图：选 Unit（单词检测用） ===== -->
+  <div id="view-units" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" onclick="goWlSelect()">← 返回</button>
+      <span></span>
+    </div>
+    <div class="hero" style="margin-top:0;">
+      <h1 id="unit-wl-title">Word List XX</h1>
+      <p>选择要练习的单元</p>
+    </div>
+    <div class="card-grid" id="unit-list"></div>
+  </div>
+
+  <!-- ===== 视图：拼写 ===== -->
+  <div id="view-quiz" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" onclick="quitQuiz()">← 退出</button>
+      <div class="progress-badge" id="progress-text">第1轮 <b>0/0</b></div>
+    </div>
+    <div class="quiz-card">
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+      <div class="quiz-cn" id="quiz-cn">—</div>
+      <div class="quiz-hint">根据中文释义拼写英文单词，回车提交</div>
+      <input type="text" id="quiz-input" class="quiz-input" autocomplete="off"
+             autocapitalize="off" autocorrect="off" spellcheck="false"
+             placeholder="输入英文单词">
+      <div class="feedback" id="quiz-feedback"></div>
+      <button class="next-btn hidden" id="next-btn" onclick="nextQuestion()">下一个 →</button>
+    </div>
+  </div>
+
+  <!-- ===== 退出确认弹窗 ===== -->
+  <div class="modal-mask hidden" id="quit-modal">
+    <div class="modal-box">
+      <h3>退出本单元？</h3>
+      <p>当前进度不会保存，已拼的词要重来。</p>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeQuitModal()">继续答题</button>
+        <button class="modal-ok" onclick="confirmQuit()">退出</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 视图：错题回顾 ===== -->
+  <div id="view-review" class="hidden">
+    <div class="review-title" id="review-title">本轮错词</div>
+    <div class="review-sub" id="review-sub">点下方按钮继续练习这些词</div>
+    <table class="review">
+      <colgroup>
+        <col style="width:42%">
+        <col style="width:29%">
+        <col style="width:29%">
+      </colgroup>
+      <thead>
+        <tr><th>中文释义</th><th>你的答案</th><th>正确答案</th></tr>
+      </thead>
+      <tbody id="review-body"></tbody>
+    </table>
+    <button class="btn-primary" onclick="startNextRound()">继续练习错词</button>
+  </div>
+
+  <!-- ===== 视图：完成 ===== -->
+  <div id="view-done" class="hidden">
+    <div class="done-card">
+      <div class="done-check">✓</div>
+      <h2>全部拼对！</h2>
+      <p id="done-sub">这个单元已经掌握了</p>
+      <button class="btn-primary" onclick="goHome()" style="max-width:280px;margin:28px auto 0;">返回首页</button>
+    </div>
+  </div>
+
+  <!-- ===== 视图：单词表 ===== -->
+  <div id="view-wordlist" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" onclick="goWlSelect()">← 返回</button>
+      <span></span>
+    </div>
+    <div class="hero" style="margin-top:0;">
+      <h1 id="wl-view-title">Word List XX</h1>
+      <p>点击蓝色英文单词播放英式发音</p>
+    </div>
+    <div class="wl-toolbar" id="wl-toolbar">共 0 个单词</div>
+    <div class="wordlist-cols" id="wordlist-body"></div>
+  </div>
+
+</div>
+
+<script>
+const WORDS = {
+  "22": {
+    "label": "Word List 22",
+    "total_new": 55,
+    "units": [
+      {
+        "name": "Unit 1",
+        "words": [
+          {
+            "e": "acute",
+            "p": "/əˈkjuːt/",
+            "c": "adj. 严重的；强烈的；敏锐的"
+          },
+          {
+            "e": "agony",
+            "p": "/ˈæɡəni/",
+            "c": "n. 极度痛苦"
+          },
+          {
+            "e": "altitude",
+            "p": "/ˈæltɪtjuːd/",
+            "c": "n. 海拔；高处"
+          },
+          {
+            "e": "aluminium",
+            "p": "/ˌæljəˈmɪniəm/",
+            "c": "n. 铝"
+          },
+          {
+            "e": "arbitrary",
+            "p": "/ˈɑːrbɪtrəri/",
+            "c": "adj. 武断的；专制的"
+          },
+          {
+            "e": "augment",
+            "p": "/ɔːɡˈment/",
+            "c": "v. 增加；提高"
+          },
+          {
+            "e": "authentic",
+            "p": "/ɔːˈθentɪk/",
+            "c": "adj. 真实的；真正的"
+          },
+          {
+            "e": "rebel",
+            "p": "/ˈrebl/",
+            "c": "n. 叛军；叛乱者 /rɪˈbel/ v. 反抗；反叛"
+          },
+          {
+            "e": "carrier",
+            "p": "/ˈkæriər/",
+            "c": "n. 运输公司；携带病菌者；运输工具"
+          },
+          {
+            "e": "precaution",
+            "p": "/prɪˈkɔːʃn/",
+            "c": "n. 预防措施；预防"
+          }
+        ]
+      },
+      {
+        "name": "Unit 2",
+        "words": [
+          {
+            "e": "reception",
+            "p": "/rɪˈsepʃn/",
+            "c": "n. 接待处；接收（效果）"
+          },
+          {
+            "e": "susceptible",
+            "p": "/səˈseptəbl/",
+            "c": "adj. 易受影响的"
+          },
+          {
+            "e": "discern",
+            "p": "/dɪˈsɜːrn/",
+            "c": "v. 辨别；识别；了解"
+          },
+          {
+            "e": "certainty",
+            "p": "/ˈsɜːrtnti/",
+            "c": "n. 确定性；确信"
+          },
+          {
+            "e": "preceding",
+            "p": "/prɪˈsiːdɪŋ/",
+            "c": "adj. 在前的；前面的"
+          },
+          {
+            "e": "concession",
+            "p": "/kənˈseʃn/",
+            "c": "n. 妥协；让步"
+          },
+          {
+            "e": "precision",
+            "p": "/prɪˈsɪʒn/",
+            "c": "n. 精确；精确度"
+          },
+          {
+            "e": "decisive",
+            "p": "/dɪˈsaɪsɪv/",
+            "c": "adj. 决定性的；关键的；果断的"
+          },
+          {
+            "e": "concise",
+            "p": "/kənˈsaɪs/",
+            "c": "adj. 简明的；简洁的"
+          },
+          {
+            "e": "proclaim",
+            "p": "/prəˈkleɪm/",
+            "c": "v. 宣布；宣告；表明"
+          }
+        ]
+      },
+      {
+        "name": "Unit 3",
+        "words": [
+          {
+            "e": "declaration",
+            "p": "/ˌdekləˈreɪʃn/",
+            "c": "n. 声明；宣告；宣言；公告"
+          },
+          {
+            "e": "inclusive",
+            "p": "/ɪnˈkluːsɪv/",
+            "c": "adj. 包容广阔的；范围广泛的"
+          },
+          {
+            "e": "colonial",
+            "p": "/kəˈləʊniəl/",
+            "c": "adj./n. 殖民的；殖民地居民"
+          },
+          {
+            "e": "consult",
+            "p": "/kənˈsʌlt/",
+            "c": "v. 咨询；请教；商议；查阅"
+          },
+          {
+            "e": "incorporate",
+            "p": "/ɪnˈkɔːrpəreɪt/",
+            "c": "v. 把…并入；包含"
+          },
+          {
+            "e": "counter",
+            "p": "/ˈkaʊntər/",
+            "c": "v./n. 反驳；驳斥；柜台"
+          },
+          {
+            "e": "discriminate",
+            "p": "/dɪˈskrɪmɪneɪt/",
+            "c": "v. 歧视；偏袒；辨别；区分"
+          },
+          {
+            "e": "accumulate",
+            "p": "/əˈkjuːmjəleɪt/",
+            "c": "v. 积累；积聚"
+          },
+          {
+            "e": "incur",
+            "p": "/ɪnˈkɜːr/",
+            "c": "v. 招致；遭受；引起"
+          },
+          {
+            "e": "recur",
+            "p": "/rɪˈkɜːr/",
+            "c": "v. 反复出现"
+          }
+        ]
+      },
+      {
+        "name": "Unit 4",
+        "words": [
+          {
+            "e": "occurrence",
+            "p": "/əˈkʌrəns/",
+            "c": "n. 发生的事情；发生；出现"
+          },
+          {
+            "e": "discourse",
+            "p": "/ˈdɪskɔːrs/",
+            "c": "n. 话语；语篇；演讲；论述"
+          },
+          {
+            "e": "condemn",
+            "p": "/kənˈdem/",
+            "c": "v. 谴责；指责；判处"
+          },
+          {
+            "e": "demographic",
+            "p": "/ˌdeməˈɡræfɪk/",
+            "c": "n./adj. 人口统计数据；人口结构的"
+          },
+          {
+            "e": "condense",
+            "p": "/kənˈdens/",
+            "c": "v. （使）凝结；冷凝；（使）变浓"
+          },
+          {
+            "e": "dental",
+            "p": "/ˈdentl/",
+            "c": "adj. 牙齿的；牙科的"
+          },
+          {
+            "e": "deteriorate",
+            "p": "/dɪˈtɪəriəreɪt/",
+            "c": "v. 恶化；变坏；退化"
+          },
+          {
+            "e": "indication",
+            "p": "/ˌɪndɪˈkeɪʃn/",
+            "c": "n. 显示；表明；标示；象征"
+          },
+          {
+            "e": "indicative",
+            "p": "/ɪnˈdɪkətɪv/",
+            "c": "adj. 指示的；表明的"
+          },
+          {
+            "e": "verdict",
+            "p": "/ˈvɜːrdɪkt/",
+            "c": "n. 裁决；意见；结论"
+          }
+        ]
+      },
+      {
+        "name": "Unit 5",
+        "words": [
+          {
+            "e": "indignation",
+            "p": "/ˌɪndɪɡˈneɪʃn/",
+            "c": "n. 愤怒；义愤；愤慨"
+          },
+          {
+            "e": "dividend",
+            "p": "/ˈdɪvɪdend/",
+            "c": "n. 红利；股息"
+          },
+          {
+            "e": "doctrine",
+            "p": "/ˈdɒktrɪn/",
+            "c": "n. 信条；教义"
+          },
+          {
+            "e": "anecdote",
+            "p": "/ˈænɪkdəʊt/",
+            "c": "n. 逸事；趣闻；传闻"
+          },
+          {
+            "e": "induce",
+            "p": "/ɪnˈdjuːs/",
+            "c": "v. 引起；导致；诱使；劝说"
+          },
+          {
+            "e": "exempt",
+            "p": "/ɪɡˈzempt/",
+            "c": "v./adj. 免除；豁免；被免除的"
+          },
+          {
+            "e": "equation",
+            "p": "/ɪˈkweɪʒn/",
+            "c": "n. 影响因素；相等"
+          },
+          {
+            "e": "essence",
+            "p": "/ˈesns/",
+            "c": "n. 实质；本质；香精；精油"
+          },
+          {
+            "e": "interface",
+            "p": "/ˈɪntərfeɪs/",
+            "c": "n. 界面；接口"
+          },
+          {
+            "e": "preface",
+            "p": "/ˈprefəs/",
+            "c": "n./v. （书的）前言；以…作为开场白"
+          }
+        ]
+      },
+      {
+        "name": "Unit 6",
+        "words": [
+          {
+            "e": "fatigue",
+            "p": "/fəˈtiːɡ/",
+            "c": "n. 疲劳；疲倦"
+          },
+          {
+            "e": "differentiate",
+            "p": "/ˌdɪfəˈrenʃieɪt/",
+            "c": "v. 区分；辨别；构成…间差别的特征"
+          },
+          {
+            "e": "confer",
+            "p": "/kənˈfɜːr/",
+            "c": "v. 赋予；授予；商议；商谈"
+          },
+          {
+            "e": "fertile",
+            "p": "/ˈfɜːrtaɪl/",
+            "c": "adj. 肥沃的；富饶的；能生育的"
+          },
+          {
+            "e": "confess",
+            "p": "/kənˈfes/",
+            "c": "v. 承认；供认；坦白"
+          }
+        ]
+      },
+      {
+        "name": "高中已学词",
+        "words": [
+          {
+            "e": "angle",
+            "p": "/ˈæŋgl/",
+            "c": "n. 角，角度，立场"
+          },
+          {
+            "e": "bond",
+            "p": "/bɒnd/",
+            "c": "n. 纽带，关系 v.增强信任关系"
+          },
+          {
+            "e": "border",
+            "p": "/ˈbɔ:də(r)/",
+            "c": "n. 国界，边界(地区)"
+          },
+          {
+            "e": "captain",
+            "p": "/ˈkæptɪn/",
+            "c": "n. (运动队)队长，船长，机长"
+          },
+          {
+            "e": "receipt",
+            "p": "/rɪˈsi:t/",
+            "c": "n. 收据，接收"
+          },
+          {
+            "e": "certificate",
+            "p": "/səˈtɪfɪkət/",
+            "c": "n. 合格证书，证明"
+          },
+          {
+            "e": "chemist",
+            "p": "/ˈkemɪst/",
+            "c": "n. 化学家，药剂师，药房"
+          },
+          {
+            "e": "comic",
+            "p": "/ˈkɒmɪk/",
+            "c": "n. 连环画杂志 adj.滑稽的"
+          },
+          {
+            "e": "recreation",
+            "p": "/ˌrekriˈeɪʃn/",
+            "c": "n. 娱乐，消遣，游戏"
+          },
+          {
+            "e": "currency",
+            "p": "/ˈkʌrənsi/",
+            "c": "通货，货币"
+          },
+          {
+            "e": "corridor",
+            "p": "/ˈkɒrɪdɔ:(r)/",
+            "c": "n. 狭长地带，走廊，过道，通道"
+          },
+          {
+            "e": "decent",
+            "p": "/ˈdi:snt/",
+            "c": "adj. 相当不错的，正派的"
+          },
+          {
+            "e": "dentist",
+            "p": "/ˈdentɪst/",
+            "c": "n. 牙科医生"
+          },
+          {
+            "e": "dedicate",
+            "p": "/ˈdedɪkeɪt/",
+            "c": "vt. 把…奉献给"
+          },
+          {
+            "e": "dignity",
+            "p": "/ˈdɪgnəti/",
+            "c": "n. 庄重，庄严，尊严"
+          },
+          {
+            "e": "domain",
+            "p": "/dəˈmeɪn/",
+            "c": "n. 领域，领土，范围"
+          },
+          {
+            "e": "donate",
+            "p": "/dəʊˈneɪt/",
+            "c": "vt. (尤指向慈善)捐赠，赠送"
+          },
+          {
+            "e": "conductor",
+            "p": "/kənˈdʌktə(r)/",
+            "c": "n. (乐队)指挥，(公车)售票员"
+          },
+          {
+            "e": "endurance",
+            "p": "/ɪnˈdjʊərəns/",
+            "c": "n. 忍耐力，耐久力"
+          },
+          {
+            "e": "ecology",
+            "p": "/iˈkɒlədʒi/",
+            "c": "n. 生态，生态学"
+          },
+          {
+            "e": "energetic",
+            "p": "/ˌenəˈdʒetɪk/",
+            "c": "adj. 精力充沛的，充满活力的"
+          },
+          {
+            "e": "fertilizer",
+            "p": "/ˈfɜ:təlaɪzə(r)/",
+            "c": "n. 肥料"
+          }
+        ]
+      },
+      {
+        "name": "初中已学词",
+        "words": [
+          {
+            "e": "excellent",
+            "p": "['eksələnt]",
+            "c": "adj 极好的，优秀的"
+          }
+        ]
+      }
+    ],
+    "all": [
+      {
+        "e": "acute",
+        "p": "/əˈkjuːt/",
+        "c": "adj. 严重的；强烈的；敏锐的"
+      },
+      {
+        "e": "agony",
+        "p": "/ˈæɡəni/",
+        "c": "n. 极度痛苦"
+      },
+      {
+        "e": "altitude",
+        "p": "/ˈæltɪtjuːd/",
+        "c": "n. 海拔；高处"
+      },
+      {
+        "e": "aluminium",
+        "p": "/ˌæljəˈmɪniəm/",
+        "c": "n. 铝"
+      },
+      {
+        "e": "angle",
+        "p": "/ˈæŋgl/",
+        "c": "n. 角，角度，立场"
+      },
+      {
+        "e": "arbitrary",
+        "p": "/ˈɑːrbɪtrəri/",
+        "c": "adj. 武断的；专制的"
+      },
+      {
+        "e": "augment",
+        "p": "/ɔːɡˈment/",
+        "c": "v. 增加；提高"
+      },
+      {
+        "e": "authentic",
+        "p": "/ɔːˈθentɪk/",
+        "c": "adj. 真实的；真正的"
+      },
+      {
+        "e": "rebel",
+        "p": "/ˈrebl/",
+        "c": "n. 叛军；叛乱者 /rɪˈbel/ v. 反抗；反叛"
+      },
+      {
+        "e": "bond",
+        "p": "/bɒnd/",
+        "c": "n. 纽带，关系 v.增强信任关系"
+      },
+      {
+        "e": "border",
+        "p": "/ˈbɔ:də(r)/",
+        "c": "n. 国界，边界(地区)"
+      },
+      {
+        "e": "captain",
+        "p": "/ˈkæptɪn/",
+        "c": "n. (运动队)队长，船长，机长"
+      },
+      {
+        "e": "carrier",
+        "p": "/ˈkæriər/",
+        "c": "n. 运输公司；携带病菌者；运输工具"
+      },
+      {
+        "e": "precaution",
+        "p": "/prɪˈkɔːʃn/",
+        "c": "n. 预防措施；预防"
+      },
+      {
+        "e": "reception",
+        "p": "/rɪˈsepʃn/",
+        "c": "n. 接待处；接收（效果）"
+      },
+      {
+        "e": "susceptible",
+        "p": "/səˈseptəbl/",
+        "c": "adj. 易受影响的"
+      },
+      {
+        "e": "receipt",
+        "p": "/rɪˈsi:t/",
+        "c": "n. 收据，接收"
+      },
+      {
+        "e": "excellent",
+        "p": "['eksələnt]",
+        "c": "adj 极好的，优秀的"
+      },
+      {
+        "e": "discern",
+        "p": "/dɪˈsɜːrn/",
+        "c": "v. 辨别；识别；了解"
+      },
+      {
+        "e": "certainty",
+        "p": "/ˈsɜːrtnti/",
+        "c": "n. 确定性；确信"
+      },
+      {
+        "e": "certificate",
+        "p": "/səˈtɪfɪkət/",
+        "c": "n. 合格证书，证明"
+      },
+      {
+        "e": "preceding",
+        "p": "/prɪˈsiːdɪŋ/",
+        "c": "adj. 在前的；前面的"
+      },
+      {
+        "e": "concession",
+        "p": "/kənˈseʃn/",
+        "c": "n. 妥协；让步"
+      },
+      {
+        "e": "chemist",
+        "p": "/ˈkemɪst/",
+        "c": "n. 化学家，药剂师，药房"
+      },
+      {
+        "e": "precision",
+        "p": "/prɪˈsɪʒn/",
+        "c": "n. 精确；精确度"
+      },
+      {
+        "e": "decisive",
+        "p": "/dɪˈsaɪsɪv/",
+        "c": "adj. 决定性的；关键的；果断的"
+      },
+      {
+        "e": "concise",
+        "p": "/kənˈsaɪs/",
+        "c": "adj. 简明的；简洁的"
+      },
+      {
+        "e": "proclaim",
+        "p": "/prəˈkleɪm/",
+        "c": "v. 宣布；宣告；表明"
+      },
+      {
+        "e": "declaration",
+        "p": "/ˌdekləˈreɪʃn/",
+        "c": "n. 声明；宣告；宣言；公告"
+      },
+      {
+        "e": "inclusive",
+        "p": "/ɪnˈkluːsɪv/",
+        "c": "adj. 包容广阔的；范围广泛的"
+      },
+      {
+        "e": "colonial",
+        "p": "/kəˈləʊniəl/",
+        "c": "adj./n. 殖民的；殖民地居民"
+      },
+      {
+        "e": "comic",
+        "p": "/ˈkɒmɪk/",
+        "c": "n. 连环画杂志 adj.滑稽的"
+      },
+      {
+        "e": "consult",
+        "p": "/kənˈsʌlt/",
+        "c": "v. 咨询；请教；商议；查阅"
+      },
+      {
+        "e": "incorporate",
+        "p": "/ɪnˈkɔːrpəreɪt/",
+        "c": "v. 把…并入；包含"
+      },
+      {
+        "e": "counter",
+        "p": "/ˈkaʊntər/",
+        "c": "v./n. 反驳；驳斥；柜台"
+      },
+      {
+        "e": "recreation",
+        "p": "/ˌrekriˈeɪʃn/",
+        "c": "n. 娱乐，消遣，游戏"
+      },
+      {
+        "e": "discriminate",
+        "p": "/dɪˈskrɪmɪneɪt/",
+        "c": "v. 歧视；偏袒；辨别；区分"
+      },
+      {
+        "e": "accumulate",
+        "p": "/əˈkjuːmjəleɪt/",
+        "c": "v. 积累；积聚"
+      },
+      {
+        "e": "incur",
+        "p": "/ɪnˈkɜːr/",
+        "c": "v. 招致；遭受；引起"
+      },
+      {
+        "e": "recur",
+        "p": "/rɪˈkɜːr/",
+        "c": "v. 反复出现"
+      },
+      {
+        "e": "occurrence",
+        "p": "/əˈkʌrəns/",
+        "c": "n. 发生的事情；发生；出现"
+      },
+      {
+        "e": "currency",
+        "p": "/ˈkʌrənsi/",
+        "c": "通货，货币"
+      },
+      {
+        "e": "corridor",
+        "p": "/ˈkɒrɪdɔ:(r)/",
+        "c": "n. 狭长地带，走廊，过道，通道"
+      },
+      {
+        "e": "discourse",
+        "p": "/ˈdɪskɔːrs/",
+        "c": "n. 话语；语篇；演讲；论述"
+      },
+      {
+        "e": "decent",
+        "p": "/ˈdi:snt/",
+        "c": "adj. 相当不错的，正派的"
+      },
+      {
+        "e": "condemn",
+        "p": "/kənˈdem/",
+        "c": "v. 谴责；指责；判处"
+      },
+      {
+        "e": "demographic",
+        "p": "/ˌdeməˈɡræfɪk/",
+        "c": "n./adj. 人口统计数据；人口结构的"
+      },
+      {
+        "e": "condense",
+        "p": "/kənˈdens/",
+        "c": "v. （使）凝结；冷凝；（使）变浓"
+      },
+      {
+        "e": "dental",
+        "p": "/ˈdentl/",
+        "c": "adj. 牙齿的；牙科的"
+      },
+      {
+        "e": "dentist",
+        "p": "/ˈdentɪst/",
+        "c": "n. 牙科医生"
+      },
+      {
+        "e": "deteriorate",
+        "p": "/dɪˈtɪəriəreɪt/",
+        "c": "v. 恶化；变坏；退化"
+      },
+      {
+        "e": "dedicate",
+        "p": "/ˈdedɪkeɪt/",
+        "c": "vt. 把…奉献给"
+      },
+      {
+        "e": "indication",
+        "p": "/ˌɪndɪˈkeɪʃn/",
+        "c": "n. 显示；表明；标示；象征"
+      },
+      {
+        "e": "indicative",
+        "p": "/ɪnˈdɪkətɪv/",
+        "c": "adj. 指示的；表明的"
+      },
+      {
+        "e": "verdict",
+        "p": "/ˈvɜːrdɪkt/",
+        "c": "n. 裁决；意见；结论"
+      },
+      {
+        "e": "dignity",
+        "p": "/ˈdɪgnəti/",
+        "c": "n. 庄重，庄严，尊严"
+      },
+      {
+        "e": "indignation",
+        "p": "/ˌɪndɪɡˈneɪʃn/",
+        "c": "n. 愤怒；义愤；愤慨"
+      },
+      {
+        "e": "dividend",
+        "p": "/ˈdɪvɪdend/",
+        "c": "n. 红利；股息"
+      },
+      {
+        "e": "doctrine",
+        "p": "/ˈdɒktrɪn/",
+        "c": "n. 信条；教义"
+      },
+      {
+        "e": "domain",
+        "p": "/dəˈmeɪn/",
+        "c": "n. 领域，领土，范围"
+      },
+      {
+        "e": "donate",
+        "p": "/dəʊˈneɪt/",
+        "c": "vt. (尤指向慈善)捐赠，赠送"
+      },
+      {
+        "e": "anecdote",
+        "p": "/ˈænɪkdəʊt/",
+        "c": "n. 逸事；趣闻；传闻"
+      },
+      {
+        "e": "induce",
+        "p": "/ɪnˈdjuːs/",
+        "c": "v. 引起；导致；诱使；劝说"
+      },
+      {
+        "e": "conductor",
+        "p": "/kənˈdʌktə(r)/",
+        "c": "n. (乐队)指挥，(公车)售票员"
+      },
+      {
+        "e": "endurance",
+        "p": "/ɪnˈdjʊərəns/",
+        "c": "n. 忍耐力，耐久力"
+      },
+      {
+        "e": "ecology",
+        "p": "/iˈkɒlədʒi/",
+        "c": "n. 生态，生态学"
+      },
+      {
+        "e": "exempt",
+        "p": "/ɪɡˈzempt/",
+        "c": "v./adj. 免除；豁免；被免除的"
+      },
+      {
+        "e": "equation",
+        "p": "/ɪˈkweɪʒn/",
+        "c": "n. 影响因素；相等"
+      },
+      {
+        "e": "energetic",
+        "p": "/ˌenəˈdʒetɪk/",
+        "c": "adj. 精力充沛的，充满活力的"
+      },
+      {
+        "e": "essence",
+        "p": "/ˈesns/",
+        "c": "n. 实质；本质；香精；精油"
+      },
+      {
+        "e": "interface",
+        "p": "/ˈɪntərfeɪs/",
+        "c": "n. 界面；接口"
+      },
+      {
+        "e": "preface",
+        "p": "/ˈprefəs/",
+        "c": "n./v. （书的）前言；以…作为开场白"
+      },
+      {
+        "e": "fatigue",
+        "p": "/fəˈtiːɡ/",
+        "c": "n. 疲劳；疲倦"
+      },
+      {
+        "e": "differentiate",
+        "p": "/ˌdɪfəˈrenʃieɪt/",
+        "c": "v. 区分；辨别；构成…间差别的特征"
+      },
+      {
+        "e": "confer",
+        "p": "/kənˈfɜːr/",
+        "c": "v. 赋予；授予；商议；商谈"
+      },
+      {
+        "e": "fertile",
+        "p": "/ˈfɜːrtaɪl/",
+        "c": "adj. 肥沃的；富饶的；能生育的"
+      },
+      {
+        "e": "fertilizer",
+        "p": "/ˈfɜ:təlaɪzə(r)/",
+        "c": "n. 肥料"
+      },
+      {
+        "e": "confess",
+        "p": "/kənˈfes/",
+        "c": "v. 承认；供认；坦白"
+      }
+    ]
+  },
+  "23": {
+    "label": "Word List 23",
+    "total_new": 54,
+    "units": [
+      {
+        "name": "Unit 1",
+        "words": [
+          {
+            "e": "deficiency",
+            "p": "/dɪˈfɪʃnsi/",
+            "c": "n. 缺乏；不足；缺陷"
+          },
+          {
+            "e": "geology",
+            "p": "/dʒiˈɒlədʒi/",
+            "c": "n. 地质学；（某地区的）地质"
+          },
+          {
+            "e": "irony",
+            "p": "/ˈaɪrəni/",
+            "c": "n. 讽刺；反语；具有讽刺意味的事"
+          },
+          {
+            "e": "catalogue",
+            "p": "/ˈkætəlɒɡ/",
+            "c": "n./v. 目录；列入目录"
+          },
+          {
+            "e": "superficial",
+            "p": "/ˌsuːpəˈfɪʃl/",
+            "c": "adj. 表面的；肤浅的"
+          },
+          {
+            "e": "isolate",
+            "p": "/ˈaɪsəleɪt/",
+            "c": "v. 使隔离；使分离"
+          },
+          {
+            "e": "analogy",
+            "p": "/əˈnælədʒi/",
+            "c": "n. 类比；类推；相似"
+          },
+          {
+            "e": "peninsula",
+            "p": "/pəˈnɪnsjələ/",
+            "c": "n. 半岛"
+          },
+          {
+            "e": "logic",
+            "p": "/ˈlɒdʒɪk/",
+            "c": "n. 逻辑；推理；道理"
+          },
+          {
+            "e": "feasible",
+            "p": "/ˈfiːzəbl/",
+            "c": "adj. 可行的；行得通的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 2",
+        "words": [
+          {
+            "e": "genre",
+            "p": "/ˈʒɒnrə/",
+            "c": "n. 体裁；类型；风格"
+          },
+          {
+            "e": "lottery",
+            "p": "/ˈlɒtəri/",
+            "c": "n. 彩票；碰运气的事"
+          },
+          {
+            "e": "confidential",
+            "p": "/ˌkɒnfɪˈdenʃl/",
+            "c": "adj. 机密的；保密的"
+          },
+          {
+            "e": "adjective",
+            "p": "/ˈædʒɪktɪv/",
+            "c": "n. 形容词"
+          },
+          {
+            "e": "lucrative",
+            "p": "/ˈluːkrətɪv/",
+            "c": "adj. 获利多的；有利可图的"
+          },
+          {
+            "e": "aggravate",
+            "p": "/ˈæɡrəveɪt/",
+            "c": "v. 使恶化；激怒"
+          },
+          {
+            "e": "conjunction",
+            "p": "/kənˈdʒʌŋkʃn/",
+            "c": "n. 连词；结合；同时发生"
+          },
+          {
+            "e": "paralyse",
+            "p": "/ˈpærəlaɪz/",
+            "c": "v. 使瘫痪；使不能正常运转"
+          },
+          {
+            "e": "finite",
+            "p": "/ˈfaɪnaɪt/",
+            "c": "adj. 有限的；限定的"
+          },
+          {
+            "e": "grave",
+            "p": "/ɡreɪv/",
+            "c": "n./adj. 坟墓；严重的；严肃的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 3",
+        "words": [
+          {
+            "e": "juvenile",
+            "p": "/ˈdʒuːvənaɪl/",
+            "c": "adj./n. 青少年的；幼稚的；青少年"
+          },
+          {
+            "e": "analytical",
+            "p": "/ˌænəˈlɪtɪkl/",
+            "c": "adj. 分析的；善于分析的"
+          },
+          {
+            "e": "infinite",
+            "p": "/ˈɪnfɪnət/",
+            "c": "adj. 无限的；无穷尽的"
+          },
+          {
+            "e": "agreeable",
+            "p": "/əˈɡriːəbl/",
+            "c": "adj. 欣然同意的；令人愉快的"
+          },
+          {
+            "e": "lateral",
+            "p": "/ˈlætərəl/",
+            "c": "adj. 侧面的；横向的"
+          },
+          {
+            "e": "affirm",
+            "p": "/əˈfɜːm/",
+            "c": "v. 证实；断言；坚定"
+          },
+          {
+            "e": "manipulate",
+            "p": "/məˈnɪpjuleɪt/",
+            "c": "v. 操纵；操作；篡改"
+          },
+          {
+            "e": "fiscal",
+            "p": "/ˈfɪskl/",
+            "c": "adj. 财政的；国库的"
+          },
+          {
+            "e": "gross",
+            "p": "/ɡrəʊs/",
+            "c": "adj. 总的；严重的；令人恶心的"
+          },
+          {
+            "e": "deliberate",
+            "p": "/dɪˈlɪbərət/",
+            "c": "adj./v. 故意的；从容的；仔细考虑"
+          }
+        ]
+      },
+      {
+        "name": "Unit 4",
+        "words": [
+          {
+            "e": "masculine",
+            "p": "/ˈmæskjəlɪn/",
+            "c": "adj. 男性的；阳刚的"
+          },
+          {
+            "e": "superfluous",
+            "p": "/suːˈpɜːfluəs/",
+            "c": "adj. 过多的；多余的"
+          },
+          {
+            "e": "inherit",
+            "p": "/ɪnˈherɪt/",
+            "c": "v. 继承；经遗传获得"
+          },
+          {
+            "e": "enforce",
+            "p": "/ɪnˈfɔːs/",
+            "c": "v. 强制执行；强迫"
+          },
+          {
+            "e": "eligible",
+            "p": "/ˈelɪdʒəbl/",
+            "c": "adj. 有资格的；符合条件的"
+          },
+          {
+            "e": "conform",
+            "p": "/kənˈfɔːm/",
+            "c": "v. 遵守；符合；顺应"
+          },
+          {
+            "e": "remedy",
+            "p": "/ˈremədi/",
+            "c": "n./v. 补救办法；治疗；补救"
+          },
+          {
+            "e": "fortunate",
+            "p": "/ˈfɔːtʃənət/",
+            "c": "adj. 幸运的"
+          },
+          {
+            "e": "humidity",
+            "p": "/hjuːˈmɪdəti/",
+            "c": "n. 湿度；潮湿"
+          },
+          {
+            "e": "align",
+            "p": "/əˈlaɪn/",
+            "c": "v. 使对齐；使一致"
+          }
+        ]
+      },
+      {
+        "name": "Unit 5",
+        "words": [
+          {
+            "e": "hygiene",
+            "p": "/ˈhaɪdʒiːn/",
+            "c": "n. 卫生"
+          },
+          {
+            "e": "preliminary",
+            "p": "/prɪˈlɪmɪnəri/",
+            "c": "adj. 初步的；预备的"
+          },
+          {
+            "e": "linguistic",
+            "p": "/lɪŋˈɡwɪstɪk/",
+            "c": "adj. 语言的；语言学的"
+          },
+          {
+            "e": "immerse",
+            "p": "/ɪˈmɜːs/",
+            "c": "v. 使浸没；使沉浸于"
+          },
+          {
+            "e": "diffuse",
+            "p": "/dɪˈfjuːz/",
+            "c": "v./adj. 扩散；传播；冗长的"
+          },
+          {
+            "e": "imaginary",
+            "p": "/ɪˈmædʒɪnəri/",
+            "c": "adj. 想象的；虚构的"
+          },
+          {
+            "e": "illiterate",
+            "p": "/ɪˈlɪtərət/",
+            "c": "adj./n. 文盲的；文盲"
+          },
+          {
+            "e": "refute",
+            "p": "/rɪˈfjuːt/",
+            "c": "v. 反驳；驳倒"
+          },
+          {
+            "e": "imitation",
+            "p": "/ˌɪmɪˈteɪʃn/",
+            "c": "n. 模仿；仿制品"
+          },
+          {
+            "e": "allocate",
+            "p": "/ˈæləkeɪt/",
+            "c": "v. 分配；拨给"
+          }
+        ]
+      },
+      {
+        "name": "Unit 6",
+        "words": [
+          {
+            "e": "immense",
+            "p": "/ɪˈmens/",
+            "c": "adj. 巨大的；广大的"
+          },
+          {
+            "e": "imperative",
+            "p": "/ɪmˈperətɪv/",
+            "c": "adj./n. 必要的；紧急的；必要的事"
+          },
+          {
+            "e": "analogue",
+            "p": "/ˈænəlɒɡ/",
+            "c": "n./adj. 类似物；模拟的"
+          },
+          {
+            "e": "emigrate",
+            "p": "/ˈemɪɡreɪt/",
+            "c": "v. 移居国外"
+          }
+        ]
+      },
+      {
+        "name": "高中已学词",
+        "words": [
+          {
+            "e": "pregnant",
+            "p": "/ˈpregnənt/",
+            "c": "adj. 怀孕的，妊娠的"
+          },
+          {
+            "e": "proficiency",
+            "p": "/prə'fɪʃnsɪ/",
+            "c": "n. 熟练，娴熟，精通"
+          },
+          {
+            "e": "hydrogen",
+            "p": "/ˈhaɪdrədʒən/",
+            "c": "n. 氢，氢气"
+          },
+          {
+            "e": "exit",
+            "p": "/ˈeksɪt/",
+            "c": "n. 出口，通道 vi.&vt.出去"
+          },
+          {
+            "e": "grand",
+            "p": "/grænd/",
+            "c": "adj. 大，宏大的"
+          },
+          {
+            "e": "profile",
+            "p": "/ˈprəʊfaɪl/",
+            "c": "n. 简介，概述 vt.扼要介绍"
+          },
+          {
+            "e": "magnitude",
+            "p": "/ˈmægnɪtju:d/",
+            "c": "n. (地)震级，重大"
+          },
+          {
+            "e": "gratitude",
+            "p": "/ˈgrætɪtju:d/",
+            "c": "n. 感激之情，感谢"
+          },
+          {
+            "e": "delete",
+            "p": "/dɪˈli:t/",
+            "c": "v. 删去，删除"
+          },
+          {
+            "e": "alleviate",
+            "p": "/əˈli:vieɪt/",
+            "c": "vt. 减轻，缓解"
+          },
+          {
+            "e": "manner",
+            "p": "/ˈmænə(r)/",
+            "c": "n. 举止，行为方式，[pl.]礼貌"
+          },
+          {
+            "e": "flexible",
+            "p": "/ˈfleksəbl/",
+            "c": "adj. 灵活的，可变通的"
+          },
+          {
+            "e": "harmony",
+            "p": "/ˈhɑ:məni/",
+            "c": "n. 和谐，融洽"
+          },
+          {
+            "e": "liberty",
+            "p": "/ˈlɪbəti/",
+            "c": "n. 自由"
+          },
+          {
+            "e": "mature",
+            "p": "/məˈtʃʊə(r)/",
+            "c": "adj. 成熟的"
+          },
+          {
+            "e": "prohibit",
+            "p": "/prəˈhɪbɪt/",
+            "c": "vt. (尤指以法令)禁止，阻止"
+          },
+          {
+            "e": "maximum",
+            "p": "/ˈmæksɪməm/",
+            "c": "adj. 最大极限的 n.最大量"
+          },
+          {
+            "e": "historic",
+            "p": "/hɪˈstɒrɪk/",
+            "c": "adj. 历史著名的，有史时期的"
+          },
+          {
+            "e": "obligation",
+            "p": "/ˌɒblɪˈgeɪʃn/",
+            "c": "n. 义务，职责，责任"
+          },
+          {
+            "e": "merchant",
+            "p": "/ˈmɜ:tʃənt/",
+            "c": "n. 商人，批发商 a.海上货运的"
+          },
+          {
+            "e": "frontier",
+            "p": "/ˈfrʌntɪə(r)/",
+            "c": "n. 边境，国界，边远地区"
+          },
+          {
+            "e": "identical",
+            "p": "/aɪˈdentɪkl/",
+            "c": "adj. 相同的"
+          },
+          {
+            "e": "geometry",
+            "p": "/dʒiˈɒmətri/",
+            "c": "n. 几何学，几何图形"
+          }
+        ]
+      },
+      {
+        "name": "初中已学词",
+        "words": [
+          {
+            "e": "mend",
+            "p": "[mend]",
+            "c": "v  修补;修理"
+          },
+          {
+            "e": "fragile",
+            "p": "['frædʒil]",
+            "c": "adj 易碎的"
+          },
+          {
+            "e": "geography",
+            "p": "[dʒi'ɔgrəfi]",
+            "c": "n 地理(学)"
+          }
+        ]
+      }
+    ],
+    "all": [
+      {
+        "e": "deficiency",
+        "p": "/dɪˈfɪʃnsi/",
+        "c": "n. 缺乏；不足；缺陷"
+      },
+      {
+        "e": "geology",
+        "p": "/dʒiˈɒlədʒi/",
+        "c": "n. 地质学；（某地区的）地质"
+      },
+      {
+        "e": "irony",
+        "p": "/ˈaɪrəni/",
+        "c": "n. 讽刺；反语；具有讽刺意味的事"
+      },
+      {
+        "e": "catalogue",
+        "p": "/ˈkætəlɒɡ/",
+        "c": "n./v. 目录；列入目录"
+      },
+      {
+        "e": "superficial",
+        "p": "/ˌsuːpəˈfɪʃl/",
+        "c": "adj. 表面的；肤浅的"
+      },
+      {
+        "e": "pregnant",
+        "p": "/ˈpregnənt/",
+        "c": "adj. 怀孕的，妊娠的"
+      },
+      {
+        "e": "isolate",
+        "p": "/ˈaɪsəleɪt/",
+        "c": "v. 使隔离；使分离"
+      },
+      {
+        "e": "analogy",
+        "p": "/əˈnælədʒi/",
+        "c": "n. 类比；类推；相似"
+      },
+      {
+        "e": "proficiency",
+        "p": "/prə'fɪʃnsɪ/",
+        "c": "n. 熟练，娴熟，精通"
+      },
+      {
+        "e": "hydrogen",
+        "p": "/ˈhaɪdrədʒən/",
+        "c": "n. 氢，氢气"
+      },
+      {
+        "e": "peninsula",
+        "p": "/pəˈnɪnsjələ/",
+        "c": "n. 半岛"
+      },
+      {
+        "e": "logic",
+        "p": "/ˈlɒdʒɪk/",
+        "c": "n. 逻辑；推理；道理"
+      },
+      {
+        "e": "feasible",
+        "p": "/ˈfiːzəbl/",
+        "c": "adj. 可行的；行得通的"
+      },
+      {
+        "e": "genre",
+        "p": "/ˈʒɒnrə/",
+        "c": "n. 体裁；类型；风格"
+      },
+      {
+        "e": "exit",
+        "p": "/ˈeksɪt/",
+        "c": "n. 出口，通道 vi.&vt.出去"
+      },
+      {
+        "e": "lottery",
+        "p": "/ˈlɒtəri/",
+        "c": "n. 彩票；碰运气的事"
+      },
+      {
+        "e": "confidential",
+        "p": "/ˌkɒnfɪˈdenʃl/",
+        "c": "adj. 机密的；保密的"
+      },
+      {
+        "e": "grand",
+        "p": "/grænd/",
+        "c": "adj. 大，宏大的"
+      },
+      {
+        "e": "adjective",
+        "p": "/ˈædʒɪktɪv/",
+        "c": "n. 形容词"
+      },
+      {
+        "e": "lucrative",
+        "p": "/ˈluːkrətɪv/",
+        "c": "adj. 获利多的；有利可图的"
+      },
+      {
+        "e": "profile",
+        "p": "/ˈprəʊfaɪl/",
+        "c": "n. 简介，概述 vt.扼要介绍"
+      },
+      {
+        "e": "aggravate",
+        "p": "/ˈæɡrəveɪt/",
+        "c": "v. 使恶化；激怒"
+      },
+      {
+        "e": "conjunction",
+        "p": "/kənˈdʒʌŋkʃn/",
+        "c": "n. 连词；结合；同时发生"
+      },
+      {
+        "e": "paralyse",
+        "p": "/ˈpærəlaɪz/",
+        "c": "v. 使瘫痪；使不能正常运转"
+      },
+      {
+        "e": "finite",
+        "p": "/ˈfaɪnaɪt/",
+        "c": "adj. 有限的；限定的"
+      },
+      {
+        "e": "grave",
+        "p": "/ɡreɪv/",
+        "c": "n./adj. 坟墓；严重的；严肃的"
+      },
+      {
+        "e": "juvenile",
+        "p": "/ˈdʒuːvənaɪl/",
+        "c": "adj./n. 青少年的；幼稚的；青少年"
+      },
+      {
+        "e": "analytical",
+        "p": "/ˌænəˈlɪtɪkl/",
+        "c": "adj. 分析的；善于分析的"
+      },
+      {
+        "e": "infinite",
+        "p": "/ˈɪnfɪnət/",
+        "c": "adj. 无限的；无穷尽的"
+      },
+      {
+        "e": "agreeable",
+        "p": "/əˈɡriːəbl/",
+        "c": "adj. 欣然同意的；令人愉快的"
+      },
+      {
+        "e": "lateral",
+        "p": "/ˈlætərəl/",
+        "c": "adj. 侧面的；横向的"
+      },
+      {
+        "e": "magnitude",
+        "p": "/ˈmægnɪtju:d/",
+        "c": "n. (地)震级，重大"
+      },
+      {
+        "e": "affirm",
+        "p": "/əˈfɜːm/",
+        "c": "v. 证实；断言；坚定"
+      },
+      {
+        "e": "gratitude",
+        "p": "/ˈgrætɪtju:d/",
+        "c": "n. 感激之情，感谢"
+      },
+      {
+        "e": "delete",
+        "p": "/dɪˈli:t/",
+        "c": "v. 删去，删除"
+      },
+      {
+        "e": "manipulate",
+        "p": "/məˈnɪpjuleɪt/",
+        "c": "v. 操纵；操作；篡改"
+      },
+      {
+        "e": "fiscal",
+        "p": "/ˈfɪskl/",
+        "c": "adj. 财政的；国库的"
+      },
+      {
+        "e": "gross",
+        "p": "/ɡrəʊs/",
+        "c": "adj. 总的；严重的；令人恶心的"
+      },
+      {
+        "e": "alleviate",
+        "p": "/əˈli:vieɪt/",
+        "c": "vt. 减轻，缓解"
+      },
+      {
+        "e": "manner",
+        "p": "/ˈmænə(r)/",
+        "c": "n. 举止，行为方式，[pl.]礼貌"
+      },
+      {
+        "e": "flexible",
+        "p": "/ˈfleksəbl/",
+        "c": "adj. 灵活的，可变通的"
+      },
+      {
+        "e": "harmony",
+        "p": "/ˈhɑ:məni/",
+        "c": "n. 和谐，融洽"
+      },
+      {
+        "e": "deliberate",
+        "p": "/dɪˈlɪbərət/",
+        "c": "adj./v. 故意的；从容的；仔细考虑"
+      },
+      {
+        "e": "masculine",
+        "p": "/ˈmæskjəlɪn/",
+        "c": "adj. 男性的；阳刚的"
+      },
+      {
+        "e": "superfluous",
+        "p": "/suːˈpɜːfluəs/",
+        "c": "adj. 过多的；多余的"
+      },
+      {
+        "e": "inherit",
+        "p": "/ɪnˈherɪt/",
+        "c": "v. 继承；经遗传获得"
+      },
+      {
+        "e": "liberty",
+        "p": "/ˈlɪbəti/",
+        "c": "n. 自由"
+      },
+      {
+        "e": "mature",
+        "p": "/məˈtʃʊə(r)/",
+        "c": "adj. 成熟的"
+      },
+      {
+        "e": "enforce",
+        "p": "/ɪnˈfɔːs/",
+        "c": "v. 强制执行；强迫"
+      },
+      {
+        "e": "prohibit",
+        "p": "/prəˈhɪbɪt/",
+        "c": "vt. (尤指以法令)禁止，阻止"
+      },
+      {
+        "e": "eligible",
+        "p": "/ˈelɪdʒəbl/",
+        "c": "adj. 有资格的；符合条件的"
+      },
+      {
+        "e": "maximum",
+        "p": "/ˈmæksɪməm/",
+        "c": "adj. 最大极限的 n.最大量"
+      },
+      {
+        "e": "conform",
+        "p": "/kənˈfɔːm/",
+        "c": "v. 遵守；符合；顺应"
+      },
+      {
+        "e": "historic",
+        "p": "/hɪˈstɒrɪk/",
+        "c": "adj. 历史著名的，有史时期的"
+      },
+      {
+        "e": "obligation",
+        "p": "/ˌɒblɪˈgeɪʃn/",
+        "c": "n. 义务，职责，责任"
+      },
+      {
+        "e": "remedy",
+        "p": "/ˈremədi/",
+        "c": "n./v. 补救办法；治疗；补救"
+      },
+      {
+        "e": "fortunate",
+        "p": "/ˈfɔːtʃənət/",
+        "c": "adj. 幸运的"
+      },
+      {
+        "e": "humidity",
+        "p": "/hjuːˈmɪdəti/",
+        "c": "n. 湿度；潮湿"
+      },
+      {
+        "e": "align",
+        "p": "/əˈlaɪn/",
+        "c": "v. 使对齐；使一致"
+      },
+      {
+        "e": "mend",
+        "p": "[mend]",
+        "c": "v  修补;修理"
+      },
+      {
+        "e": "fragile",
+        "p": "['frædʒil]",
+        "c": "adj 易碎的"
+      },
+      {
+        "e": "hygiene",
+        "p": "/ˈhaɪdʒiːn/",
+        "c": "n. 卫生"
+      },
+      {
+        "e": "preliminary",
+        "p": "/prɪˈlɪmɪnəri/",
+        "c": "adj. 初步的；预备的"
+      },
+      {
+        "e": "merchant",
+        "p": "/ˈmɜ:tʃənt/",
+        "c": "n. 商人，批发商 a.海上货运的"
+      },
+      {
+        "e": "frontier",
+        "p": "/ˈfrʌntɪə(r)/",
+        "c": "n. 边境，国界，边远地区"
+      },
+      {
+        "e": "identical",
+        "p": "/aɪˈdentɪkl/",
+        "c": "adj. 相同的"
+      },
+      {
+        "e": "linguistic",
+        "p": "/lɪŋˈɡwɪstɪk/",
+        "c": "adj. 语言的；语言学的"
+      },
+      {
+        "e": "immerse",
+        "p": "/ɪˈmɜːs/",
+        "c": "v. 使浸没；使沉浸于"
+      },
+      {
+        "e": "diffuse",
+        "p": "/dɪˈfjuːz/",
+        "c": "v./adj. 扩散；传播；冗长的"
+      },
+      {
+        "e": "imaginary",
+        "p": "/ɪˈmædʒɪnəri/",
+        "c": "adj. 想象的；虚构的"
+      },
+      {
+        "e": "illiterate",
+        "p": "/ɪˈlɪtərət/",
+        "c": "adj./n. 文盲的；文盲"
+      },
+      {
+        "e": "geometry",
+        "p": "/dʒiˈɒmətri/",
+        "c": "n. 几何学，几何图形"
+      },
+      {
+        "e": "refute",
+        "p": "/rɪˈfjuːt/",
+        "c": "v. 反驳；驳倒"
+      },
+      {
+        "e": "imitation",
+        "p": "/ˌɪmɪˈteɪʃn/",
+        "c": "n. 模仿；仿制品"
+      },
+      {
+        "e": "allocate",
+        "p": "/ˈæləkeɪt/",
+        "c": "v. 分配；拨给"
+      },
+      {
+        "e": "immense",
+        "p": "/ɪˈmens/",
+        "c": "adj. 巨大的；广大的"
+      },
+      {
+        "e": "geography",
+        "p": "[dʒi'ɔgrəfi]",
+        "c": "n 地理(学)"
+      },
+      {
+        "e": "imperative",
+        "p": "/ɪmˈperətɪv/",
+        "c": "adj./n. 必要的；紧急的；必要的事"
+      },
+      {
+        "e": "analogue",
+        "p": "/ˈænəlɒɡ/",
+        "c": "n./adj. 类似物；模拟的"
+      },
+      {
+        "e": "emigrate",
+        "p": "/ˈemɪɡreɪt/",
+        "c": "v. 移居国外"
+      }
+    ]
+  },
+  "24": {
+    "label": "Word List 24",
+    "total_new": 59,
+    "units": [
+      {
+        "name": "Unit 1",
+        "words": [
+          {
+            "e": "omit",
+            "p": "/əˈmɪt/",
+            "c": "v. 忽略；漏掉；遗漏"
+          },
+          {
+            "e": "ornament",
+            "p": "/ˈɔːnəmənt/",
+            "c": "n./v. 装饰品；装饰"
+          },
+          {
+            "e": "query",
+            "p": "/ˈkwɪəri/",
+            "c": "n./v. 疑问；质疑"
+          },
+          {
+            "e": "premise",
+            "p": "/ˈpremɪs/",
+            "c": "n. 前提；假定"
+          },
+          {
+            "e": "transparent",
+            "p": "/trænsˈpærənt/",
+            "c": "adj. 透明的；清楚易懂的"
+          },
+          {
+            "e": "duplicate",
+            "p": "/ˈdjuːplɪkeɪt/",
+            "c": "v./adj. 复制；复制的"
+          },
+          {
+            "e": "erase",
+            "p": "/ɪˈreɪz/",
+            "c": "v. 消除；擦掉"
+          },
+          {
+            "e": "emit",
+            "p": "/ɪˈmɪt/",
+            "c": "v. 排放；散发；发出"
+          },
+          {
+            "e": "partial",
+            "p": "/ˈpɑːʃl/",
+            "c": "adj. 部分的；偏袒的"
+          },
+          {
+            "e": "compliment",
+            "p": "/ˈkɒmplɪmənt/",
+            "c": "n./v. 赞美；恭维"
+          }
+        ]
+      },
+      {
+        "name": "Unit 2",
+        "words": [
+          {
+            "e": "rational",
+            "p": "/ˈræʃnəl/",
+            "c": "adj. 理性的；合理的"
+          },
+          {
+            "e": "particle",
+            "p": "/ˈpɑːtɪkl/",
+            "c": "n. 粒子；颗粒"
+          },
+          {
+            "e": "plentiful",
+            "p": "/ˈplentɪfl/",
+            "c": "adj. 充足的；大量的"
+          },
+          {
+            "e": "erect",
+            "p": "/ɪˈrekt/",
+            "c": "v. 建造；竖立"
+          },
+          {
+            "e": "modernization",
+            "p": "/ˌmɒdənaɪˈzeɪʃn/",
+            "c": "n. 现代化"
+          },
+          {
+            "e": "impatient",
+            "p": "/ɪmˈpeɪʃnt/",
+            "c": "adj. 不耐烦的；迫不及待的"
+          },
+          {
+            "e": "applicable",
+            "p": "/əˈplɪkəbl/",
+            "c": "adj. 适用的；适合的"
+          },
+          {
+            "e": "regime",
+            "p": "/reɪˈʒiːm/",
+            "c": "n. 政权；制度"
+          },
+          {
+            "e": "naive",
+            "p": "/naɪˈiːv/",
+            "c": "adj. 幼稚的；天真的"
+          },
+          {
+            "e": "surpass",
+            "p": "/səˈpɑːs/",
+            "c": "v. 超过；胜过"
+          }
+        ]
+      },
+      {
+        "name": "Unit 3",
+        "words": [
+          {
+            "e": "negligible",
+            "p": "/ˈneɡlɪdʒəbl/",
+            "c": "adj. 微不足道的；可忽略的"
+          },
+          {
+            "e": "repel",
+            "p": "/rɪˈpel/",
+            "c": "v. 击退；驱逐；使厌恶"
+          },
+          {
+            "e": "rhetoric",
+            "p": "/ˈretərɪk/",
+            "c": "n. 花言巧语；修辞艺术"
+          },
+          {
+            "e": "neutral",
+            "p": "/ˈnjuːtrəl/",
+            "c": "adj. 中立的；不露声色的"
+          },
+          {
+            "e": "compulsory",
+            "p": "/kəmˈpʌlsəri/",
+            "c": "adj. 义务的；强制性的"
+          },
+          {
+            "e": "rotate",
+            "p": "/rəʊˈteɪt/",
+            "c": "v. 旋转；轮换"
+          },
+          {
+            "e": "denote",
+            "p": "/dɪˈnəʊt/",
+            "c": "v. 表示；意指"
+          },
+          {
+            "e": "expenditure",
+            "p": "/ɪkˈspendɪtʃə/",
+            "c": "n. 支出；开支；耗费"
+          },
+          {
+            "e": "posture",
+            "p": "/ˈpɒstʃə/",
+            "c": "n. 姿势；态度"
+          },
+          {
+            "e": "abrupt",
+            "p": "/əˈbrʌpt/",
+            "c": "adj. 突然的；唐突的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 4",
+        "words": [
+          {
+            "e": "novelty",
+            "p": "/ˈnɒvlti/",
+            "c": "n. 新奇；新颖的物品"
+          },
+          {
+            "e": "numerical",
+            "p": "/njuːˈmerɪkl/",
+            "c": "adj. 数字的"
+          },
+          {
+            "e": "disposition",
+            "p": "/ˌdɪspəˈzɪʃn/",
+            "c": "n. 性情；布置；倾向"
+          },
+          {
+            "e": "perpetual",
+            "p": "/pəˈpetʃuəl/",
+            "c": "adj. 持续的；没完没了的；永久的"
+          },
+          {
+            "e": "proposition",
+            "p": "/ˌprɒpəˈzɪʃn/",
+            "c": "n. 主张；任务；提议"
+          },
+          {
+            "e": "petroleum",
+            "p": "/pɪˈtrəʊliəm/",
+            "c": "n. 石油"
+          },
+          {
+            "e": "pit",
+            "p": "/pɪt/",
+            "c": "n./v. 深坑；打洞"
+          },
+          {
+            "e": "predator",
+            "p": "/ˈpredətə(r)/",
+            "c": "n. 捕食者；掠夺者"
+          },
+          {
+            "e": "anonymous",
+            "p": "/əˈnɒnɪməs/",
+            "c": "adj. 匿名的"
+          },
+          {
+            "e": "compress",
+            "p": "/kəmˈpres/",
+            "c": "v. 压缩；精简"
+          }
+        ]
+      },
+      {
+        "name": "Unit 5",
+        "words": [
+          {
+            "e": "prescribe",
+            "p": "/prɪˈskraɪb/",
+            "c": "v. 开药方；规定"
+          },
+          {
+            "e": "cooperative",
+            "p": "/kəʊˈɒpərətɪv/",
+            "c": "adj./n. 合作的；合作企业"
+          },
+          {
+            "e": "physicist",
+            "p": "/ˈfɪzɪsɪst/",
+            "c": "n. 物理学家"
+          },
+          {
+            "e": "probe",
+            "p": "/prəʊb/",
+            "c": "v. 探究；打探"
+          },
+          {
+            "e": "operational",
+            "p": "/ˌɒpəˈreɪʃənl/",
+            "c": "adj. 操作的；运营的"
+          },
+          {
+            "e": "compile",
+            "p": "/kəmˈpaɪl/",
+            "c": "v. 汇编；编制"
+          },
+          {
+            "e": "probability",
+            "p": "/ˌprɒbəˈbɪləti/",
+            "c": "n. 可能性；概率"
+          },
+          {
+            "e": "manuscript",
+            "p": "/ˈmænjuskrɪpt/",
+            "c": "n. 原稿；手稿"
+          },
+          {
+            "e": "orchestra",
+            "p": "/ˈɔːkɪstrə/",
+            "c": "n. 管弦乐队"
+          },
+          {
+            "e": "empirical",
+            "p": "/ɪmˈpɪrɪkl/",
+            "c": "adj. 以经验为依据的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 6",
+        "words": [
+          {
+            "e": "prone",
+            "p": "/prəʊn/",
+            "c": "adj. 易于……的"
+          },
+          {
+            "e": "prescription",
+            "p": "/prɪˈskrɪpʃn/",
+            "c": "n. 处方；药方"
+          },
+          {
+            "e": "subordinate",
+            "p": "/səˈbɔːdɪnət/",
+            "c": "n./adj. 下属；从属的"
+          },
+          {
+            "e": "plague",
+            "p": "/pleɪɡ/",
+            "c": "n./v. 瘟疫；困扰"
+          },
+          {
+            "e": "purify",
+            "p": "/ˈpjʊərɪfaɪ/",
+            "c": "v. 净化"
+          },
+          {
+            "e": "transplant",
+            "p": "/trænsˈplɑːnt/",
+            "c": "v. 移植"
+          },
+          {
+            "e": "quantitative",
+            "p": "/ˈkwɒntɪtətɪv/",
+            "c": "adj. 量化的"
+          },
+          {
+            "e": "orderly",
+            "p": "/ˈɔːdəli/",
+            "c": "adj. 有秩序的；守秩序的"
+          },
+          {
+            "e": "plausible",
+            "p": "/ˈplɔːzəbl/",
+            "c": "adj. 可信的；有道理的"
+          }
+        ]
+      },
+      {
+        "name": "高中已学词",
+        "words": [
+          {
+            "e": "appliance",
+            "p": "/əˈplaɪəns/",
+            "c": "n. 电器，器具"
+          },
+          {
+            "e": "accommodation",
+            "p": "/əˌkɒməˈdeɪʃn/",
+            "c": "n. 住处，停留处，膳宿"
+          },
+          {
+            "e": "explode",
+            "p": "/ɪkˈspləʊd/",
+            "c": "vi. &vt.爆炸，爆破"
+          },
+          {
+            "e": "arrest",
+            "p": "/əˈrest/",
+            "c": "n. 逮捕，拘留 vt.逮捕，拘留"
+          },
+          {
+            "e": "polish",
+            "p": "/ˈpɒlɪʃ/",
+            "c": "vt. 修改，润色 n.上光剂"
+          },
+          {
+            "e": "postpone",
+            "p": "/pəˈspəʊn/",
+            "c": "vt. 延迟，延期，延缓"
+          },
+          {
+            "e": "pessimistic",
+            "p": "/ˌpesɪˈmɪstɪk/",
+            "c": "adj. 悲观的，悲观主义的"
+          },
+          {
+            "e": "disposal",
+            "p": "/dɪˈspəʊzl/",
+            "c": "n. 去掉，清除，处理"
+          },
+          {
+            "e": "erupt",
+            "p": "/ɪˈrʌpt/",
+            "c": "vi. &vt.火山爆发，岩浆喷出"
+          },
+          {
+            "e": "appetite",
+            "p": "/ˈæpɪtaɪt/",
+            "c": "n. 食欲，胃口，强烈欲望"
+          },
+          {
+            "e": "sacred",
+            "p": "/ˈseɪkrɪd/",
+            "c": "adj. 神圣的，受尊敬的"
+          },
+          {
+            "e": "numerous",
+            "p": "/ˈnju:mərəs/",
+            "c": "adj. 众多的，许多的"
+          },
+          {
+            "e": "descendant",
+            "p": "/dɪˈsendənt/",
+            "c": "n. 后裔，后代，子孙"
+          },
+          {
+            "e": "microscope",
+            "p": "/ˈmaɪkrəskəʊp/",
+            "c": "n. 显微镜"
+          },
+          {
+            "e": "symphony",
+            "p": "/ˈsɪmfəni/",
+            "c": "n. 交响乐，交响曲"
+          },
+          {
+            "e": "subscribe",
+            "p": "/səbˈskraɪb/",
+            "c": "vi. 认购(股份)，定期订购"
+          },
+          {
+            "e": "extraordinary",
+            "p": "/ɪkˈstrɔ:dnri/",
+            "c": "adj. 不一般的，非凡的，想不到的"
+          },
+          {
+            "e": "conquer",
+            "p": "/ˈkɒŋkə(r)/",
+            "c": "vt. 占领，征服，控制"
+          }
+        ]
+      }
+    ],
+    "all": [
+      {
+        "e": "omit",
+        "p": "/əˈmɪt/",
+        "c": "v. 忽略；漏掉；遗漏"
+      },
+      {
+        "e": "ornament",
+        "p": "/ˈɔːnəmənt/",
+        "c": "n./v. 装饰品；装饰"
+      },
+      {
+        "e": "appliance",
+        "p": "/əˈplaɪəns/",
+        "c": "n. 电器，器具"
+      },
+      {
+        "e": "query",
+        "p": "/ˈkwɪəri/",
+        "c": "n./v. 疑问；质疑"
+      },
+      {
+        "e": "premise",
+        "p": "/ˈpremɪs/",
+        "c": "n. 前提；假定"
+      },
+      {
+        "e": "transparent",
+        "p": "/trænsˈpærənt/",
+        "c": "adj. 透明的；清楚易懂的"
+      },
+      {
+        "e": "duplicate",
+        "p": "/ˈdjuːplɪkeɪt/",
+        "c": "v./adj. 复制；复制的"
+      },
+      {
+        "e": "erase",
+        "p": "/ɪˈreɪz/",
+        "c": "v. 消除；擦掉"
+      },
+      {
+        "e": "emit",
+        "p": "/ɪˈmɪt/",
+        "c": "v. 排放；散发；发出"
+      },
+      {
+        "e": "partial",
+        "p": "/ˈpɑːʃl/",
+        "c": "adj. 部分的；偏袒的"
+      },
+      {
+        "e": "compliment",
+        "p": "/ˈkɒmplɪmənt/",
+        "c": "n./v. 赞美；恭维"
+      },
+      {
+        "e": "rational",
+        "p": "/ˈræʃnəl/",
+        "c": "adj. 理性的；合理的"
+      },
+      {
+        "e": "accommodation",
+        "p": "/əˌkɒməˈdeɪʃn/",
+        "c": "n. 住处，停留处，膳宿"
+      },
+      {
+        "e": "particle",
+        "p": "/ˈpɑːtɪkl/",
+        "c": "n. 粒子；颗粒"
+      },
+      {
+        "e": "plentiful",
+        "p": "/ˈplentɪfl/",
+        "c": "adj. 充足的；大量的"
+      },
+      {
+        "e": "erect",
+        "p": "/ɪˈrekt/",
+        "c": "v. 建造；竖立"
+      },
+      {
+        "e": "modernization",
+        "p": "/ˌmɒdənaɪˈzeɪʃn/",
+        "c": "n. 现代化"
+      },
+      {
+        "e": "impatient",
+        "p": "/ɪmˈpeɪʃnt/",
+        "c": "adj. 不耐烦的；迫不及待的"
+      },
+      {
+        "e": "applicable",
+        "p": "/əˈplɪkəbl/",
+        "c": "adj. 适用的；适合的"
+      },
+      {
+        "e": "regime",
+        "p": "/reɪˈʒiːm/",
+        "c": "n. 政权；制度"
+      },
+      {
+        "e": "naive",
+        "p": "/naɪˈiːv/",
+        "c": "adj. 幼稚的；天真的"
+      },
+      {
+        "e": "surpass",
+        "p": "/səˈpɑːs/",
+        "c": "v. 超过；胜过"
+      },
+      {
+        "e": "explode",
+        "p": "/ɪkˈspləʊd/",
+        "c": "vi. &vt.爆炸，爆破"
+      },
+      {
+        "e": "arrest",
+        "p": "/əˈrest/",
+        "c": "n. 逮捕，拘留 vt.逮捕，拘留"
+      },
+      {
+        "e": "negligible",
+        "p": "/ˈneɡlɪdʒəbl/",
+        "c": "adj. 微不足道的；可忽略的"
+      },
+      {
+        "e": "repel",
+        "p": "/rɪˈpel/",
+        "c": "v. 击退；驱逐；使厌恶"
+      },
+      {
+        "e": "polish",
+        "p": "/ˈpɒlɪʃ/",
+        "c": "vt. 修改，润色 n.上光剂"
+      },
+      {
+        "e": "rhetoric",
+        "p": "/ˈretərɪk/",
+        "c": "n. 花言巧语；修辞艺术"
+      },
+      {
+        "e": "neutral",
+        "p": "/ˈnjuːtrəl/",
+        "c": "adj. 中立的；不露声色的"
+      },
+      {
+        "e": "compulsory",
+        "p": "/kəmˈpʌlsəri/",
+        "c": "adj. 义务的；强制性的"
+      },
+      {
+        "e": "postpone",
+        "p": "/pəˈspəʊn/",
+        "c": "vt. 延迟，延期，延缓"
+      },
+      {
+        "e": "rotate",
+        "p": "/rəʊˈteɪt/",
+        "c": "v. 旋转；轮换"
+      },
+      {
+        "e": "denote",
+        "p": "/dɪˈnəʊt/",
+        "c": "v. 表示；意指"
+      },
+      {
+        "e": "expenditure",
+        "p": "/ɪkˈspendɪtʃə/",
+        "c": "n. 支出；开支；耗费"
+      },
+      {
+        "e": "posture",
+        "p": "/ˈpɒstʃə/",
+        "c": "n. 姿势；态度"
+      },
+      {
+        "e": "abrupt",
+        "p": "/əˈbrʌpt/",
+        "c": "adj. 突然的；唐突的"
+      },
+      {
+        "e": "novelty",
+        "p": "/ˈnɒvlti/",
+        "c": "n. 新奇；新颖的物品"
+      },
+      {
+        "e": "pessimistic",
+        "p": "/ˌpesɪˈmɪstɪk/",
+        "c": "adj. 悲观的，悲观主义的"
+      },
+      {
+        "e": "disposal",
+        "p": "/dɪˈspəʊzl/",
+        "c": "n. 去掉，清除，处理"
+      },
+      {
+        "e": "erupt",
+        "p": "/ɪˈrʌpt/",
+        "c": "vi. &vt.火山爆发，岩浆喷出"
+      },
+      {
+        "e": "numerical",
+        "p": "/njuːˈmerɪkl/",
+        "c": "adj. 数字的"
+      },
+      {
+        "e": "appetite",
+        "p": "/ˈæpɪtaɪt/",
+        "c": "n. 食欲，胃口，强烈欲望"
+      },
+      {
+        "e": "disposition",
+        "p": "/ˌdɪspəˈzɪʃn/",
+        "c": "n. 性情；布置；倾向"
+      },
+      {
+        "e": "sacred",
+        "p": "/ˈseɪkrɪd/",
+        "c": "adj. 神圣的，受尊敬的"
+      },
+      {
+        "e": "numerous",
+        "p": "/ˈnju:mərəs/",
+        "c": "adj. 众多的，许多的"
+      },
+      {
+        "e": "perpetual",
+        "p": "/pəˈpetʃuəl/",
+        "c": "adj. 持续的；没完没了的；永久的"
+      },
+      {
+        "e": "proposition",
+        "p": "/ˌprɒpəˈzɪʃn/",
+        "c": "n. 主张；任务；提议"
+      },
+      {
+        "e": "descendant",
+        "p": "/dɪˈsendənt/",
+        "c": "n. 后裔，后代，子孙"
+      },
+      {
+        "e": "petroleum",
+        "p": "/pɪˈtrəʊliəm/",
+        "c": "n. 石油"
+      },
+      {
+        "e": "pit",
+        "p": "/pɪt/",
+        "c": "n./v. 深坑；打洞"
+      },
+      {
+        "e": "predator",
+        "p": "/ˈpredətə(r)/",
+        "c": "n. 捕食者；掠夺者"
+      },
+      {
+        "e": "microscope",
+        "p": "/ˈmaɪkrəskəʊp/",
+        "c": "n. 显微镜"
+      },
+      {
+        "e": "anonymous",
+        "p": "/əˈnɒnɪməs/",
+        "c": "adj. 匿名的"
+      },
+      {
+        "e": "symphony",
+        "p": "/ˈsɪmfəni/",
+        "c": "n. 交响乐，交响曲"
+      },
+      {
+        "e": "compress",
+        "p": "/kəmˈpres/",
+        "c": "v. 压缩；精简"
+      },
+      {
+        "e": "prescribe",
+        "p": "/prɪˈskraɪb/",
+        "c": "v. 开药方；规定"
+      },
+      {
+        "e": "cooperative",
+        "p": "/kəʊˈɒpərətɪv/",
+        "c": "adj./n. 合作的；合作企业"
+      },
+      {
+        "e": "physicist",
+        "p": "/ˈfɪzɪsɪst/",
+        "c": "n. 物理学家"
+      },
+      {
+        "e": "probe",
+        "p": "/prəʊb/",
+        "c": "v. 探究；打探"
+      },
+      {
+        "e": "subscribe",
+        "p": "/səbˈskraɪb/",
+        "c": "vi. 认购(股份)，定期订购"
+      },
+      {
+        "e": "operational",
+        "p": "/ˌɒpəˈreɪʃənl/",
+        "c": "adj. 操作的；运营的"
+      },
+      {
+        "e": "compile",
+        "p": "/kəmˈpaɪl/",
+        "c": "v. 汇编；编制"
+      },
+      {
+        "e": "probability",
+        "p": "/ˌprɒbəˈbɪləti/",
+        "c": "n. 可能性；概率"
+      },
+      {
+        "e": "manuscript",
+        "p": "/ˈmænjuskrɪpt/",
+        "c": "n. 原稿；手稿"
+      },
+      {
+        "e": "orchestra",
+        "p": "/ˈɔːkɪstrə/",
+        "c": "n. 管弦乐队"
+      },
+      {
+        "e": "empirical",
+        "p": "/ɪmˈpɪrɪkl/",
+        "c": "adj. 以经验为依据的"
+      },
+      {
+        "e": "prone",
+        "p": "/prəʊn/",
+        "c": "adj. 易于……的"
+      },
+      {
+        "e": "prescription",
+        "p": "/prɪˈskrɪpʃn/",
+        "c": "n. 处方；药方"
+      },
+      {
+        "e": "subordinate",
+        "p": "/səˈbɔːdɪnət/",
+        "c": "n./adj. 下属；从属的"
+      },
+      {
+        "e": "plague",
+        "p": "/pleɪɡ/",
+        "c": "n./v. 瘟疫；困扰"
+      },
+      {
+        "e": "purify",
+        "p": "/ˈpjʊərɪfaɪ/",
+        "c": "v. 净化"
+      },
+      {
+        "e": "extraordinary",
+        "p": "/ɪkˈstrɔ:dnri/",
+        "c": "adj. 不一般的，非凡的，想不到的"
+      },
+      {
+        "e": "transplant",
+        "p": "/trænsˈplɑːnt/",
+        "c": "v. 移植"
+      },
+      {
+        "e": "quantitative",
+        "p": "/ˈkwɒntɪtətɪv/",
+        "c": "adj. 量化的"
+      },
+      {
+        "e": "orderly",
+        "p": "/ˈɔːdəli/",
+        "c": "adj. 有秩序的；守秩序的"
+      },
+      {
+        "e": "plausible",
+        "p": "/ˈplɔːzəbl/",
+        "c": "adj. 可信的；有道理的"
+      },
+      {
+        "e": "conquer",
+        "p": "/ˈkɒŋkə(r)/",
+        "c": "vt. 占领，征服，控制"
+      }
+    ]
+  },
+  "25": {
+    "label": "Word List 25",
+    "total_new": 57,
+    "units": [
+      {
+        "name": "Unit 1",
+        "words": [
+          {
+            "e": "specialize",
+            "p": "/ˈspeʃəlaɪz/",
+            "c": "v. 专门研究；专攻"
+          },
+          {
+            "e": "detector",
+            "p": "/dɪˈtektə(r)/",
+            "c": "n. 探测器；检测器"
+          },
+          {
+            "e": "vacuum",
+            "p": "/ˈvækjuəm/",
+            "c": "n. 真空；空虚"
+          },
+          {
+            "e": "prosecute",
+            "p": "/ˈprɒsɪkjuːt/",
+            "c": "v. 起诉；控告；继续做"
+          },
+          {
+            "e": "spiritual",
+            "p": "/ˈspɪrɪtʃuəl/",
+            "c": "adj. 精神的；心灵的"
+          },
+          {
+            "e": "tedious",
+            "p": "/ˈtiːdiəs/",
+            "c": "adj. 单调乏味的；令人厌烦的"
+          },
+          {
+            "e": "prevail",
+            "p": "/prɪˈveɪl/",
+            "c": "v. 盛行；战胜"
+          },
+          {
+            "e": "assembly",
+            "p": "/əˈsembli/",
+            "c": "n. 装配；组装；集会"
+          },
+          {
+            "e": "spontaneous",
+            "p": "/spɒnˈteɪniəs/",
+            "c": "adj. 自发的；自然的"
+          },
+          {
+            "e": "contemplate",
+            "p": "/ˈkɒntəmpleɪt/",
+            "c": "v. 考虑；深思"
+          }
+        ]
+      },
+      {
+        "name": "Unit 2",
+        "words": [
+          {
+            "e": "invalid",
+            "p": "/ɪnˈvælɪd/",
+            "c": "adj./n. 无效的；病弱者"
+          },
+          {
+            "e": "assimilate",
+            "p": "/əˈsɪməleɪt/",
+            "c": "v. 同化；吸收"
+          },
+          {
+            "e": "correspondent",
+            "p": "/ˌkɒrəˈspɒndənt/",
+            "c": "n. 记者；通讯员；通信者"
+          },
+          {
+            "e": "intensive",
+            "p": "/ɪnˈtensɪv/",
+            "c": "adj. 密集的；集约的"
+          },
+          {
+            "e": "prevalent",
+            "p": "/ˈprevələnt/",
+            "c": "adj. 流行的；盛行的；普遍的"
+          },
+          {
+            "e": "presently",
+            "p": "/ˈprezntli/",
+            "c": "adv. 目前；很快"
+          },
+          {
+            "e": "tense",
+            "p": "/tens/",
+            "c": "adj./n. 绷紧的；紧张的；时态"
+          },
+          {
+            "e": "revelation",
+            "p": "/ˌrevəˈleɪʃn/",
+            "c": "n. 揭露；被曝光的真相"
+          },
+          {
+            "e": "resent",
+            "p": "/rɪˈzent/",
+            "c": "v. 憎恶；怨恨"
+          },
+          {
+            "e": "stern",
+            "p": "/stɜːn/",
+            "c": "adj. 严格的；严峻的；严厉的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 3",
+        "words": [
+          {
+            "e": "velocity",
+            "p": "/vəˈlɒsəti/",
+            "c": "n. 速度"
+          },
+          {
+            "e": "reservation",
+            "p": "/ˌrezəˈveɪʃn/",
+            "c": "n. 预订；保留意见"
+          },
+          {
+            "e": "tentative",
+            "p": "/ˈtentətɪv/",
+            "c": "adj. 暂定的；犹豫不定的"
+          },
+          {
+            "e": "avenue",
+            "p": "/ˈævənjuː/",
+            "c": "n. 大道；林荫道；途径"
+          },
+          {
+            "e": "considerate",
+            "p": "/kənˈsɪdərət/",
+            "c": "adj. 体贴的；替他人着想的"
+          },
+          {
+            "e": "stationary",
+            "p": "/ˈsteɪʃənri/",
+            "c": "adj. 不动的；静止的；固定的"
+          },
+          {
+            "e": "terminate",
+            "p": "/ˈtɜːmɪneɪt/",
+            "c": "v. 结束；终止"
+          },
+          {
+            "e": "preside",
+            "p": "/prɪˈzaɪd/",
+            "c": "v. 主持；负责"
+          },
+          {
+            "e": "therapy",
+            "p": "/ˈθerəpi/",
+            "c": "n. 疗法；治疗"
+          },
+          {
+            "e": "converge",
+            "p": "/kənˈvɜːdʒ/",
+            "c": "v. 趋同；聚集"
+          }
+        ]
+      },
+      {
+        "name": "Unit 4",
+        "words": [
+          {
+            "e": "designate",
+            "p": "/ˈdezɪɡneɪt/",
+            "c": "v. 标明；指定；指派"
+          },
+          {
+            "e": "constituent",
+            "p": "/kənˈstɪtjuənt/",
+            "c": "n./adj. 选民；成分；组成的"
+          },
+          {
+            "e": "synthetic",
+            "p": "/sɪnˈθetɪk/",
+            "c": "adj. 人造的；合成的"
+          },
+          {
+            "e": "invert",
+            "p": "/ɪnˈvɜːt/",
+            "c": "v. 使颠倒；使倒置"
+          },
+          {
+            "e": "silicon",
+            "p": "/ˈsɪlɪkən/",
+            "c": "n. 硅"
+          },
+          {
+            "e": "destruction",
+            "p": "/dɪˈstrʌkʃn/",
+            "c": "n. 破坏；毁灭"
+          },
+          {
+            "e": "continual",
+            "p": "/kənˈtɪnjuəl/",
+            "c": "adj. 持续的；一再的"
+          },
+          {
+            "e": "divert",
+            "p": "/daɪˈvɜːt/",
+            "c": "v. 转移；分散"
+          },
+          {
+            "e": "singular",
+            "p": "/ˈsɪŋɡjələ(r)/",
+            "c": "adj./n. 非凡的；单数的；奇特的"
+          },
+          {
+            "e": "toxic",
+            "p": "/ˈtɒksɪk/",
+            "c": "adj. 有毒的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 5",
+        "words": [
+          {
+            "e": "diversion",
+            "p": "/daɪˈvɜːʃn/",
+            "c": "n. 消遣；娱乐；转移"
+          },
+          {
+            "e": "persuasion",
+            "p": "/pəˈsweɪʒn/",
+            "c": "n. 劝说；说服；信仰"
+          },
+          {
+            "e": "conversely",
+            "p": "/ˈkɒnvɜːsli/",
+            "c": "adv. 相反地"
+          },
+          {
+            "e": "skim",
+            "p": "/skɪm/",
+            "c": "v. 浏览；掠过"
+          },
+          {
+            "e": "intricate",
+            "p": "/ˈɪntrɪkət/",
+            "c": "adj. 错综复杂的"
+          },
+          {
+            "e": "conviction",
+            "p": "/kənˈvɪkʃn/",
+            "c": "n. 定罪；坚定的信念"
+          },
+          {
+            "e": "sole",
+            "p": "/səʊl/",
+            "c": "adj. 唯一的；仅有的"
+          },
+          {
+            "e": "superiority",
+            "p": "/suːˌpɪəriˈɒrəti/",
+            "c": "n. 优越；优势"
+          },
+          {
+            "e": "insure",
+            "p": "/ɪnˈʃʊə(r)/",
+            "c": "v. 确保；投保"
+          },
+          {
+            "e": "turbulent",
+            "p": "/ˈtɜːbjələnt/",
+            "c": "adj. 动荡的；汹涌的"
+          }
+        ]
+      },
+      {
+        "name": "Unit 6",
+        "words": [
+          {
+            "e": "virgin",
+            "p": "/ˈvɜːdʒɪn/",
+            "c": "adj./n. 原始的；贞洁的；新手"
+          },
+          {
+            "e": "spectrum",
+            "p": "/ˈspektrəm/",
+            "c": "n. 范围；光谱"
+          },
+          {
+            "e": "assurance",
+            "p": "/əˈʃʊərəns/",
+            "c": "n. 把握；信心；保证"
+          },
+          {
+            "e": "abound",
+            "p": "/əˈbaʊnd/",
+            "c": "v. 大量存在"
+          },
+          {
+            "e": "conspicuous",
+            "p": "/kənˈspɪkjuəs/",
+            "c": "adj. 明显的"
+          },
+          {
+            "e": "detach",
+            "p": "/dɪˈtætʃ/",
+            "c": "v. 脱离；拆卸"
+          },
+          {
+            "e": "vacant",
+            "p": "/ˈveɪkənt/",
+            "c": "adj. 空着的；茫然的"
+          }
+        ]
+      },
+      {
+        "name": "高中已学词",
+        "words": [
+          {
+            "e": "secondary",
+            "p": "/ˈsekəndri/",
+            "c": "adj. 中学的，次要的"
+          },
+          {
+            "e": "correspondence",
+            "p": "/ˌkɒrəˈspɒndəns/",
+            "c": "n. 来往信件，通信联系"
+          },
+          {
+            "e": "pretend",
+            "p": "/prɪˈtend/",
+            "c": "vi. &vt.叚装，装扮"
+          },
+          {
+            "e": "destination",
+            "p": "/ˌdestɪˈneɪʃn/",
+            "c": "n. 目的地，终点"
+          },
+          {
+            "e": "intervene",
+            "p": "/ˌɪntəˈvi:n/",
+            "c": "vi. 干预，介入"
+          },
+          {
+            "e": "distinct",
+            "p": "/dɪˈstɪŋkt/",
+            "c": "adj. 清晰的，清楚的，有区别的"
+          },
+          {
+            "e": "studio",
+            "p": "/ˈstju:diəʊ/",
+            "c": "n. 演播室，(音乐的)录音棚"
+          },
+          {
+            "e": "consistent",
+            "p": "/kənˈsɪstənt/",
+            "c": "adj. 一致的，连续的"
+          },
+          {
+            "e": "resume",
+            "p": "/rɪ'zju:m/",
+            "c": "n. (求职用的)履历，简历"
+          },
+          {
+            "e": "tune",
+            "p": "/tju:n/",
+            "c": "n. 曲调，曲子 vt.调音，调节"
+          },
+          {
+            "e": "violent",
+            "p": "/ˈvaɪələnt/",
+            "c": "adj. 暴力的，猛烈的"
+          },
+          {
+            "e": "resolution",
+            "p": "/ˌrezəˈlu:ʃn/",
+            "c": "n. 决议，解决，坚定"
+          },
+          {
+            "e": "subway",
+            "p": "/ˈsʌbweɪ/",
+            "c": "n. 地铁"
+          },
+          {
+            "e": "voyage",
+            "p": "/ˈvɔɪɪdʒ/",
+            "c": "n. &vi.航海，航行"
+          }
+        ]
+      },
+      {
+        "name": "初中已学词",
+        "words": [
+          {
+            "e": "tractor",
+            "p": "['træktə]",
+            "c": "n 拖拉机"
+          }
+        ]
+      }
+    ],
+    "all": [
+      {
+        "e": "secondary",
+        "p": "/ˈsekəndri/",
+        "c": "adj. 中学的，次要的"
+      },
+      {
+        "e": "specialize",
+        "p": "/ˈspeʃəlaɪz/",
+        "c": "v. 专门研究；专攻"
+      },
+      {
+        "e": "detector",
+        "p": "/dɪˈtektə(r)/",
+        "c": "n. 探测器；检测器"
+      },
+      {
+        "e": "vacuum",
+        "p": "/ˈvækjuəm/",
+        "c": "n. 真空；空虚"
+      },
+      {
+        "e": "prosecute",
+        "p": "/ˈprɒsɪkjuːt/",
+        "c": "v. 起诉；控告；继续做"
+      },
+      {
+        "e": "spiritual",
+        "p": "/ˈspɪrɪtʃuəl/",
+        "c": "adj. 精神的；心灵的"
+      },
+      {
+        "e": "tedious",
+        "p": "/ˈtiːdiəs/",
+        "c": "adj. 单调乏味的；令人厌烦的"
+      },
+      {
+        "e": "prevail",
+        "p": "/prɪˈveɪl/",
+        "c": "v. 盛行；战胜"
+      },
+      {
+        "e": "assembly",
+        "p": "/əˈsembli/",
+        "c": "n. 装配；组装；集会"
+      },
+      {
+        "e": "spontaneous",
+        "p": "/spɒnˈteɪniəs/",
+        "c": "adj. 自发的；自然的"
+      },
+      {
+        "e": "contemplate",
+        "p": "/ˈkɒntəmpleɪt/",
+        "c": "v. 考虑；深思"
+      },
+      {
+        "e": "invalid",
+        "p": "/ɪnˈvælɪd/",
+        "c": "adj./n. 无效的；病弱者"
+      },
+      {
+        "e": "assimilate",
+        "p": "/əˈsɪməleɪt/",
+        "c": "v. 同化；吸收"
+      },
+      {
+        "e": "correspondent",
+        "p": "/ˌkɒrəˈspɒndənt/",
+        "c": "n. 记者；通讯员；通信者"
+      },
+      {
+        "e": "intensive",
+        "p": "/ɪnˈtensɪv/",
+        "c": "adj. 密集的；集约的"
+      },
+      {
+        "e": "prevalent",
+        "p": "/ˈprevələnt/",
+        "c": "adj. 流行的；盛行的；普遍的"
+      },
+      {
+        "e": "presently",
+        "p": "/ˈprezntli/",
+        "c": "adv. 目前；很快"
+      },
+      {
+        "e": "correspondence",
+        "p": "/ˌkɒrəˈspɒndəns/",
+        "c": "n. 来往信件，通信联系"
+      },
+      {
+        "e": "tense",
+        "p": "/tens/",
+        "c": "adj./n. 绷紧的；紧张的；时态"
+      },
+      {
+        "e": "revelation",
+        "p": "/ˌrevəˈleɪʃn/",
+        "c": "n. 揭露；被曝光的真相"
+      },
+      {
+        "e": "resent",
+        "p": "/rɪˈzent/",
+        "c": "v. 憎恶；怨恨"
+      },
+      {
+        "e": "stern",
+        "p": "/stɜːn/",
+        "c": "adj. 严格的；严峻的；严厉的"
+      },
+      {
+        "e": "pretend",
+        "p": "/prɪˈtend/",
+        "c": "vi. &vt.叚装，装扮"
+      },
+      {
+        "e": "velocity",
+        "p": "/vəˈlɒsəti/",
+        "c": "n. 速度"
+      },
+      {
+        "e": "reservation",
+        "p": "/ˌrezəˈveɪʃn/",
+        "c": "n. 预订；保留意见"
+      },
+      {
+        "e": "destination",
+        "p": "/ˌdestɪˈneɪʃn/",
+        "c": "n. 目的地，终点"
+      },
+      {
+        "e": "tentative",
+        "p": "/ˈtentətɪv/",
+        "c": "adj. 暂定的；犹豫不定的"
+      },
+      {
+        "e": "avenue",
+        "p": "/ˈævənjuː/",
+        "c": "n. 大道；林荫道；途径"
+      },
+      {
+        "e": "considerate",
+        "p": "/kənˈsɪdərət/",
+        "c": "adj. 体贴的；替他人着想的"
+      },
+      {
+        "e": "stationary",
+        "p": "/ˈsteɪʃənri/",
+        "c": "adj. 不动的；静止的；固定的"
+      },
+      {
+        "e": "terminate",
+        "p": "/ˈtɜːmɪneɪt/",
+        "c": "v. 结束；终止"
+      },
+      {
+        "e": "intervene",
+        "p": "/ˌɪntəˈvi:n/",
+        "c": "vi. 干预，介入"
+      },
+      {
+        "e": "preside",
+        "p": "/prɪˈzaɪd/",
+        "c": "v. 主持；负责"
+      },
+      {
+        "e": "distinct",
+        "p": "/dɪˈstɪŋkt/",
+        "c": "adj. 清晰的，清楚的，有区别的"
+      },
+      {
+        "e": "therapy",
+        "p": "/ˈθerəpi/",
+        "c": "n. 疗法；治疗"
+      },
+      {
+        "e": "converge",
+        "p": "/kənˈvɜːdʒ/",
+        "c": "v. 趋同；聚集"
+      },
+      {
+        "e": "designate",
+        "p": "/ˈdezɪɡneɪt/",
+        "c": "v. 标明；指定；指派"
+      },
+      {
+        "e": "constituent",
+        "p": "/kənˈstɪtjuənt/",
+        "c": "n./adj. 选民；成分；组成的"
+      },
+      {
+        "e": "synthetic",
+        "p": "/sɪnˈθetɪk/",
+        "c": "adj. 人造的；合成的"
+      },
+      {
+        "e": "invert",
+        "p": "/ɪnˈvɜːt/",
+        "c": "v. 使颠倒；使倒置"
+      },
+      {
+        "e": "silicon",
+        "p": "/ˈsɪlɪkən/",
+        "c": "n. 硅"
+      },
+      {
+        "e": "destruction",
+        "p": "/dɪˈstrʌkʃn/",
+        "c": "n. 破坏；毁灭"
+      },
+      {
+        "e": "continual",
+        "p": "/kənˈtɪnjuəl/",
+        "c": "adj. 持续的；一再的"
+      },
+      {
+        "e": "divert",
+        "p": "/daɪˈvɜːt/",
+        "c": "v. 转移；分散"
+      },
+      {
+        "e": "singular",
+        "p": "/ˈsɪŋɡjələ(r)/",
+        "c": "adj./n. 非凡的；单数的；奇特的"
+      },
+      {
+        "e": "studio",
+        "p": "/ˈstju:diəʊ/",
+        "c": "n. 演播室，(音乐的)录音棚"
+      },
+      {
+        "e": "toxic",
+        "p": "/ˈtɒksɪk/",
+        "c": "adj. 有毒的"
+      },
+      {
+        "e": "diversion",
+        "p": "/daɪˈvɜːʃn/",
+        "c": "n. 消遣；娱乐；转移"
+      },
+      {
+        "e": "consistent",
+        "p": "/kənˈsɪstənt/",
+        "c": "adj. 一致的，连续的"
+      },
+      {
+        "e": "persuasion",
+        "p": "/pəˈsweɪʒn/",
+        "c": "n. 劝说；说服；信仰"
+      },
+      {
+        "e": "tractor",
+        "p": "['træktə]",
+        "c": "n 拖拉机"
+      },
+      {
+        "e": "conversely",
+        "p": "/ˈkɒnvɜːsli/",
+        "c": "adv. 相反地"
+      },
+      {
+        "e": "skim",
+        "p": "/skɪm/",
+        "c": "v. 浏览；掠过"
+      },
+      {
+        "e": "resume",
+        "p": "/rɪ'zju:m/",
+        "c": "n. (求职用的)履历，简历"
+      },
+      {
+        "e": "intricate",
+        "p": "/ˈɪntrɪkət/",
+        "c": "adj. 错综复杂的"
+      },
+      {
+        "e": "conviction",
+        "p": "/kənˈvɪkʃn/",
+        "c": "n. 定罪；坚定的信念"
+      },
+      {
+        "e": "sole",
+        "p": "/səʊl/",
+        "c": "adj. 唯一的；仅有的"
+      },
+      {
+        "e": "superiority",
+        "p": "/suːˌpɪəriˈɒrəti/",
+        "c": "n. 优越；优势"
+      },
+      {
+        "e": "tune",
+        "p": "/tju:n/",
+        "c": "n. 曲调，曲子 vt.调音，调节"
+      },
+      {
+        "e": "violent",
+        "p": "/ˈvaɪələnt/",
+        "c": "adj. 暴力的，猛烈的"
+      },
+      {
+        "e": "resolution",
+        "p": "/ˌrezəˈlu:ʃn/",
+        "c": "n. 决议，解决，坚定"
+      },
+      {
+        "e": "insure",
+        "p": "/ɪnˈʃʊə(r)/",
+        "c": "v. 确保；投保"
+      },
+      {
+        "e": "turbulent",
+        "p": "/ˈtɜːbjələnt/",
+        "c": "adj. 动荡的；汹涌的"
+      },
+      {
+        "e": "virgin",
+        "p": "/ˈvɜːdʒɪn/",
+        "c": "adj./n. 原始的；贞洁的；新手"
+      },
+      {
+        "e": "spectrum",
+        "p": "/ˈspektrəm/",
+        "c": "n. 范围；光谱"
+      },
+      {
+        "e": "assurance",
+        "p": "/əˈʃʊərəns/",
+        "c": "n. 把握；信心；保证"
+      },
+      {
+        "e": "abound",
+        "p": "/əˈbaʊnd/",
+        "c": "v. 大量存在"
+      },
+      {
+        "e": "subway",
+        "p": "/ˈsʌbweɪ/",
+        "c": "n. 地铁"
+      },
+      {
+        "e": "conspicuous",
+        "p": "/kənˈspɪkjuəs/",
+        "c": "adj. 明显的"
+      },
+      {
+        "e": "detach",
+        "p": "/dɪˈtætʃ/",
+        "c": "v. 脱离；拆卸"
+      },
+      {
+        "e": "vacant",
+        "p": "/ˈveɪkənt/",
+        "c": "adj. 空着的；茫然的"
+      },
+      {
+        "e": "voyage",
+        "p": "/ˈvɔɪɪdʒ/",
+        "c": "n. &vi.航海，航行"
+      }
+    ]
+  }
+};
+
+// ===== 状态 =====
+const state = {
+  mode: null,        // 'quiz' | 'wordlist'
+  wl: null,
+  unitIdx: null,
+  roundQueue: [],
+  pos: 0,
+  roundNum: 1,
+  wrongInRound: [],
+};
+
+const CHEERS = ["Perfect!", "Excellent!", "Great!", "Awesome!", "Brilliant!",
+                "Well done!", "Correct!", "Nice!", "Fantastic!", "Superb!"];
+
+// ===== Web Speech 英式发音 =====
+let currentSpeakEl = null;
+function speakUK(word, el) {
+  if (!("speechSynthesis" in window)) {
+    alert("当前浏览器不支持语音播放");
+    return;
+  }
+  speechSynthesis.cancel();
+  // 移除上一个高亮
+  if (currentSpeakEl) currentSpeakEl.classList.remove("speaking");
+
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = "en-GB";
+  u.rate = 0.85;
+  // 尽量挑英式声音
+  const voices = speechSynthesis.getVoices();
+  const ukVoice = voices.find(v => /en-GB|en_GB|uk/i.test(v.lang + v.name))
+               || voices.find(v => /en/i.test(v.lang));
+  if (ukVoice) u.voice = ukVoice;
+
+  currentSpeakEl = el;
+  el.classList.add("speaking");
+  u.onend = u.onerror = () => el.classList.remove("speaking");
+  speechSynthesis.speak(u);
+}
+// 部分浏览器 voices 异步加载
+if ("speechSynthesis" in window) speechSynthesis.getVoices();
+
+// ===== 视图切换 =====
+function show(id) {
+  ["view-home","view-wl","view-units","view-quiz","view-review","view-done","view-wordlist"]
+    .forEach(v => document.getElementById(v).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  window.scrollTo(0, 0);
+}
+
+function goHome() { show("view-home"); }
+
+// ===== 入口：选择模式 =====
+function enterMode(mode) {
+  state.mode = mode;
+  renderWlList();
+  show("view-wl");
+}
+
+// ===== 选 WL（两种模式共用） =====
+function renderWlList() {
+  document.getElementById("wl-title").textContent =
+    state.mode === "quiz" ? "选择 Word List" : "选择 Word List";
+  document.getElementById("wl-sub").textContent =
+    state.mode === "quiz" ? "练习拼写" : "浏览单词表";
+  const list = document.getElementById("wl-list");
+  list.innerHTML = "";
+  Object.keys(WORDS).sort().forEach(k => {
+    const wl = WORDS[k];
+    const totalWords = wl.all.length;
+    const sub = state.mode === "quiz"
+      ? `${wl.units.length} 个单元 · 共 ${totalWords} 词`
+      : `共 ${totalWords} 词`;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div>
+        <div class="label">Word List ${k}</div>
+        <div class="sub">${sub}</div>
+      </div>
+      <div class="arrow">›</div>`;
+    card.onclick = () => onWlSelected(k);
+    list.appendChild(card);
+  });
+}
+
+function onWlSelected(wlKey) {
+  state.wl = wlKey;
+  if (state.mode === "quiz") {
+    showUnits();
+  } else {
+    renderWordlist();
+  }
+}
+
+function goWlSelect() {
+  speechSynthesis && speechSynthesis.cancel();
+  renderWlList();
+  show("view-wl");
+}
+
+// ===== 单词检测：选 Unit =====
+function showUnits() {
+  const wl = WORDS[state.wl];
+  document.getElementById("unit-wl-title").textContent = `Word List ${state.wl}`;
+  const list = document.getElementById("unit-list");
+  list.innerHTML = "";
+  wl.units.forEach((u, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div>
+        <div class="label">${u.name}</div>
+        <div class="sub">${u.words.length} 个词</div>
+      </div>
+      <div class="arrow">›</div>`;
+    card.onclick = () => startQuiz(i);
+    list.appendChild(card);
+  });
+  show("view-units");
+}
+
+// ===== 单词表：列出全部单词 =====
+function renderWordlist() {
+  const wl = WORDS[state.wl];
+  document.getElementById("wl-view-title").textContent = `Word List ${state.wl} 单词表`;
+  document.getElementById("wl-toolbar").textContent = `共 ${wl.all.length} 个单词 · 点击蓝色单词听英式发音`;
+  const body = document.getElementById("wordlist-body");
+  body.innerHTML = "";
+  wl.all.forEach(w => {
+    const div = document.createElement("div");
+    div.className = "wl-item";
+    const phon = w.p ? `<span class="wl-phon">${w.p}</span>` : "";
+    div.innerHTML = `
+      <span class="wl-en">${w.e}</span>${phon}
+      <div class="wl-cn">${w.c}</div>`;
+    div.querySelector(".wl-en").onclick = (e) => {
+      speakUK(w.e, e.currentTarget);
+    };
+    body.appendChild(div);
+  });
+  show("view-wordlist");
+}
+
+// ===== 拼写流程 =====
+function startQuiz(unitIdx) {
+  state.unitIdx = unitIdx;
+  const unit = WORDS[state.wl].units[unitIdx];
+  state.roundQueue = unit.words.map(w => ({...w}));
+  state.pos = 0;
+  state.roundNum = 1;
+  state.wrongInRound = [];
+  show("view-quiz");
+  renderQuestion();
+}
+
+// ===== 倒计时（CSS animation 驱动，丝滑） =====
+let timerTOs = [];
+let timeTotal = 0;
+function getTimeLimit(word) {
+  return Math.max(6, 4 + word.e.length);
+}
+function stopTimer() {
+  timerTOs.forEach(clearTimeout);
+  timerTOs = [];
+  const fill = document.getElementById("timer-fill");
+  if (fill) {
+    fill.style.animation = "none";
+    fill.style.width = "0%";
+  }
+}
+function startTimer() {
+  stopTimer();
+  const word = state.roundQueue[state.pos];
+  timeTotal = getTimeLimit(word);
+  const fill = document.getElementById("timer-fill");
+  // 重启 CSS 动画
+  fill.style.animation = 'none';
+  void fill.offsetWidth;
+  fill.style.animation = `shrink ${timeTotal}s linear forwards`;
+  fill.className = "timer-fill";
+
+  // 颜色切换 & 超时检测（JS 只在关键时间点触发，不逐帧）
+  timerTOs.push(setTimeout(() => fill.classList.add("warning"), timeTotal * 1000 * 0.4));
+  timerTOs.push(setTimeout(() => fill.classList.add("danger"),  timeTotal * 1000 * 0.7));
+  timerTOs.push(setTimeout(handleTimeout, timeTotal * 1000));
+}
+
+function hideNextButton() {
+  document.getElementById("next-btn").classList.add("hidden");
+}
+function showNextButton() {
+  document.getElementById("next-btn").classList.remove("hidden");
+}
+
+function renderQuestion() {
+  const total = state.roundQueue.length;
+  document.getElementById("progress-text").innerHTML =
+    `第${state.roundNum}轮 <b>${Math.min(state.pos+1, total)}/${total}</b>`;
+
+  const word = state.roundQueue[state.pos];
+  document.getElementById("quiz-cn").textContent = word.c;
+  const input = document.getElementById("quiz-input");
+  input.value = "";
+  input.className = "quiz-input";
+  input.disabled = false;
+  document.getElementById("quiz-feedback").innerHTML = "";
+  hideNextButton();
+  input.focus();
+  startTimer();
+}
+
+function checkAnswer() {
+  const input = document.getElementById("quiz-input");
+  const userAns = input.value.trim();
+  if (!userAns || input.disabled) return;
+  stopTimer();
+  const word = state.roundQueue[state.pos];
+  const correct = word.e.trim().toLowerCase();
+  const userNorm = userAns.toLowerCase();
+
+  const fb = document.getElementById("quiz-feedback");
+
+  if (userNorm === correct) {
+    input.className = "quiz-input correct";
+    input.disabled = true;
+    fb.className = "feedback ok";
+    fb.textContent = CHEERS[Math.floor(Math.random()*CHEERS.length)] + " ✓";
+    setTimeout(nextQuestion, 550);
+  } else {
+    input.className = "quiz-input wrong";
+    input.disabled = true;
+    state.wrongInRound.push({ c: word.c, userAns: userAns, correctAns: word.e });
+    fb.className = "feedback no";
+    fb.innerHTML = `Wrong!<span class="right-ans">${word.e}</span>`;
+    showNextButton();
+  }
+}
+
+function handleTimeout() {
+  const input = document.getElementById("quiz-input");
+  if (input.disabled) return;  // 已提交过
+  const word = state.roundQueue[state.pos];
+  const userAns = input.value.trim();
+  input.disabled = true;
+
+  // 时间到了先判答案：写对了就算过
+  if (userAns && userAns.toLowerCase() === word.e.toLowerCase()) {
+    input.className = "quiz-input correct";
+    const fb = document.getElementById("quiz-feedback");
+    fb.className = "feedback ok";
+    fb.textContent = "Just in time! ✓";
+    setTimeout(nextQuestion, 800);
+    return;
+  }
+
+  state.wrongInRound.push({ c: word.c, userAns: userAns || "超时", correctAns: word.e });
+  const fb = document.getElementById("quiz-feedback");
+  fb.className = "feedback no";
+  fb.innerHTML = `Time's up!<span class="right-ans">${word.e}</span>`;
+  showNextButton();
+}
+
+function nextQuestion() {
+  state.pos++;
+  if (state.pos < state.roundQueue.length) {
+    renderQuestion();
+  } else {
+    endRound();
+  }
+}
+
+function endRound() {
+  if (state.wrongInRound.length === 0) {
+    document.getElementById("done-sub").textContent =
+      `Word List ${state.wl} · ${WORDS[state.wl].units[state.unitIdx].name} 已掌握`;
+    show("view-done");
+  } else {
+    document.getElementById("review-title").textContent =
+      `第 ${state.roundNum} 轮 · 错 ${state.wrongInRound.length} 词`;
+    const tbody = document.getElementById("review-body");
+    tbody.innerHTML = "";
+    state.wrongInRound.forEach(w => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${w.c}</td>
+        <td class="ans-wrong">${w.userAns}</td>
+        <td class="ans-right">${w.correctAns}</td>`;
+      tbody.appendChild(tr);
+    });
+    show("view-review");
+  }
+}
+
+function startNextRound() {
+  state.roundQueue = state.wrongInRound.map(w => {
+    const src = WORDS[state.wl].units[state.unitIdx].words.find(x => x.e === w.correctAns);
+    return { e: w.correctAns, p: src ? src.p : "", c: w.c };
+  });
+  state.pos = 0;
+  state.roundNum++;
+  state.wrongInRound = [];
+  show("view-quiz");
+  renderQuestion();
+}
+
+function quitQuiz() {
+  stopTimer();
+  document.getElementById("quit-modal").classList.remove("hidden");
+}
+function closeQuitModal() {
+  document.getElementById("quit-modal").classList.add("hidden");
+  // 取消退出，这题重新计时
+  if (!document.getElementById("quiz-input").disabled) startTimer();
+}
+function confirmQuit() {
+  document.getElementById("quit-modal").classList.add("hidden");
+  showUnits();
+}
+
+// ===== 事件绑定 =====
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("quiz-input");
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !input.disabled) checkAnswer();
+  });
+  show("view-home");
+});
+</script>
+</body>
+</html>
