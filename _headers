@@ -10,3 +10,10 @@
   Content-Type: image/png
 /index.html
   Cache-Control: no-cache
+
+/
+  Cache-Control: no-cache
+/repair
+  Cache-Control: no-cache, no-store, must-revalidate
+/repair.html
+  Cache-Control: no-cache, no-store, must-revalidate

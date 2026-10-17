@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1A56DB"><title>学海词舟 · 程序修复</title><link rel="apple-touch-icon" href="apple-touch-icon.png?v=62"><style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#263c5f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;padding:calc(32px + env(safe-area-inset-top,0px)) 24px 40px;line-height:1.8}main{max-width:480px;margin:8vh auto}h1{font-size:26px}p{font-size:15px;color:#66768e}button,a{font:inherit}button,.open{display:inline-block;background:#2460d8;color:white;border:0;border-radius:12px;padding:13px 20px;text-decoration:none;margin:12px 12px 0 0}button:disabled{opacity:.6}[hidden]{display:none!important}#status{color:#263c5f;overflow-wrap:anywhere}
+</style></head><body><main><h1>学海词舟 · 程序修复</h1><p>页面打不开时，可在这里更新程序。修复不会清除学习记录、打卡或未完成练习。</p><p>请先结束其他窗口中的练习并关闭它们，再点击修复。学习数据保存在各自浏览器中；Safari 与主屏幕 App 的数据可能不同，请保留原 App。</p><p id="status" role="status" aria-live="polite">请保持联网。</p><button id="repair" type="button">修复程序</button><a id="open" class="open" href="./" hidden>打开学海词舟</a><noscript><p>请允许 JavaScript 后再试。</p></noscript></main><script>
+(()=>{
+ const button=document.getElementById('repair'),status=document.getElementById('status'),open=document.getElementById('open');
+ const request=(worker,type)=>new Promise((resolve,reject)=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();reject(Error('操作超时，请重试。'));},8000);channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data);};try{worker.postMessage({type},[channel.port2]);}catch(e){clearTimeout(timer);channel.port1.close();reject(e);}});
+ const pause=()=>new Promise(r=>setTimeout(r,250));
+ button.onclick=async()=>{
+  button.disabled=true;open.hidden=true;status.textContent='正在检查并更新程序，请保持联网…';
+  try{
+   if(!isSecureContext||!('serviceWorker' in navigator))throw Error('请使用正式 HTTPS 网址打开此页面。');
+   const registration=await navigator.serviceWorker.register(new URL('sw.js',location.href),{scope:new URL('./',location.href).pathname,updateViaCache:'none'});
+   await registration.update();const until=Date.now()+65000;
+   while(Date.now()<until){
+    if(registration.waiting){
+     const result=await request(registration.waiting,'REPAIR_ACTIVATE');
+     if(!result.ok)throw Error(result.reason==='close-other-pages'?'请关闭其他学海词舟窗口和主屏幕 App，再回到这里重新点击修复。':'暂时无法切换程序，请稍后重试。');
+    }
+    if(registration.active?.state==='activated'){
+     const info=await request(registration.active,'OFFLINE_STATUS');
+     if(info.version==='v62'&&info.ready){status.textContent='程序已修复。可以重新打开学海词舟；原有学习数据保留。';open.hidden=false;return;}
+    }
+    if(!registration.installing&&!registration.waiting&&registration.active?.state!=='activating')throw Error('尚未收到完整的新版程序，请确认新版发布文件全部上传后重试。');
+    await pause();
+   }
+   throw Error('更新尚未完成，请保持联网后重试。');
+  }catch(e){status.textContent=e.message||'修复暂未完成，请联网后重试。';}
+  finally{button.disabled=false;}
+ };
+})();
+</script></body></html>
