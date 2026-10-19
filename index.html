@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="welcome-root">
 <head>
 <meta charset="UTF-8">
-<meta name="app-version" content="v68">
+<meta name="app-version" content="v70">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1A56DB">
 <style>
@@ -45,10 +45,10 @@ window.XuehaiBoot=(()=>{
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="学海词舟">
-<title>学海词舟 · 本地记录版 v68</title>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=68">
+<title>学海词舟 · 本地记录版 v70</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=70">
 <!-- iOS 主屏图标 -->
-<link id="apple-app-icon" rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=68">
+<link id="apple-app-icon" rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=70">
 
 <!-- PWA manifest（data URI 内嵌） -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -717,6 +717,19 @@ body.is-welcome .welcome-water {margin-top:0;}
 .me-data-help {font-size:13px;line-height:1.8;color:#7b8faa;}
 .me-data-actions {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 12px;}
 .me-data-actions button {min-height:46px;padding:10px 8px;border:1px solid #d9e3f3;border-radius:12px;background:#f5f8ff;color:#2460d8;font:inherit;font-size:14px;font-weight:600;cursor:pointer;}
+
+.backup-status-panel{margin:14px 0 18px;padding:14px 16px;border:1px solid #e3eaf4;border-radius:12px;background:#f7f9fd;}
+.backup-status-panel p{margin:0;color:#6e7d93;font-size:13px;line-height:1.8;overflow-wrap:anywhere;}
+.backup-status-panel #backup-current-status{color:#314c75;}
+.backup-status-panel[data-kind="changes"] #backup-current-status,.backup-status-panel[data-kind="never"] #backup-current-status{color:#916631;}
+.backup-status-panel .backup-status-note{font-size:12px;color:#8a94a6;margin-top:5px;}
+.backup-reminder{margin-top:24px;padding:20px;border:1px solid #dce6f7;border-radius:16px;background:#edf3fd;}
+.backup-reminder h2{margin:0 0 8px;font-size:16px;color:#254877;}
+.backup-reminder p{margin:0;font-size:13px;line-height:1.8;color:#667b9b;}
+.backup-reminder-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.backup-reminder-actions button{border:1px solid #d0ddf2;background:transparent;color:#56729c;border-radius:10px;padding:9px 13px;font:inherit;font-size:13px;cursor:pointer;}
+.backup-reminder-actions #backup-reminder-go{border-color:#1a56db;background:#1a56db;color:#fff;}
+
 .me-backup-actions {display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
 .me-backup-actions button {border:0;background:none;color:#7285a2;font:inherit;font-size:12px;padding:8px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
 @media(max-height:600px) {
@@ -789,7 +802,7 @@ body.is-welcome .welcome-water {margin-top:0;}
 </head>
 <body class="is-welcome">
 <section id="startup-panel" role="status" aria-live="polite">
-  <div class="startup-card"><h1 class="startup-brand">学海词舟</h1><p class="startup-version">本地记录版 v68</p>
+  <div class="startup-card"><h1 class="startup-brand">学海词舟</h1><p class="startup-version">本地记录版 v70</p>
     <p id="startup-status">正在打开学海词舟…</p><p id="startup-help">正在读取程序和本机学习记录，请稍候。</p>
     <div id="startup-actions" hidden><button type="button" onclick="XuehaiBoot.retry()">重新打开</button></div>
     <noscript><p>请允许浏览器运行JavaScript后重新打开。学习记录不会自动清空。</p></noscript>
@@ -824,6 +837,10 @@ body.is-welcome .welcome-water {margin-top:0;}
       <button class="shell-module" id="home-test-exam" onclick="enterMode('quiz')"><span class="module-symbol exam-symbol" aria-hidden="true">Aa</span><span class="module-copy"><strong>考研生词</strong><span>按单元练习，巩固拼写</span></span><span class="module-arrow" aria-hidden="true">›</span></button>
       <button class="shell-module" id="home-test-hs" onclick="enterHsQuizMode()"><span class="module-symbol hs-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6a3 3 0 0 1 3 3v13a4 4 0 0 0-4-2H4V4Zm16 0h-4a3 3 0 0 0-3 3v13a4 4 0 0 1 4-2h3V4Z"/></svg></span><span class="module-copy"><strong>高中单词</strong><span>分批巩固，或练习整单元</span></span><span class="module-arrow" aria-hidden="true">›</span></button>
     </div>
+    <section id="backup-reminder" class="backup-reminder" aria-labelledby="backup-reminder-title" hidden>
+      <h2 id="backup-reminder-title">给学习进度留一份备份</h2><p id="backup-reminder-description"></p>
+      <div class="backup-reminder-actions"><button type="button" id="backup-reminder-go">去备份</button><button type="button" id="backup-reminder-snooze">今天不再提醒</button></div>
+    </section>
     <section class="shell-resume-section"><div class="shell-section-title"><h2>继续练习</h2><span>接回上一次的位置</span></div><div id="shell-resume-slot"></div></section>
   </div>
 
@@ -855,6 +872,10 @@ body.is-welcome .welcome-water {margin-top:0;}
     <section class="me-data-card" aria-labelledby="me-data-title">
       <h2 id="me-data-title">学习数据与备份</h2>
       <p class="me-data-help">换设备前先导出并保存文件，到另一设备导入后，从首页继续未完成练习。</p>
+      <div id="backup-status-panel" class="backup-status-panel" role="status" aria-live="polite">
+        <p id="backup-last-export">正在读取上次导出时间…</p><p id="backup-current-status"></p>
+        <p class="backup-status-note">导出后请确认文件已下载保存。</p>
+      </div>
       <div class="me-data-actions">
         <button type="button" onclick="exportHistory()">导出学习数据</button>
         <button type="button" onclick="document.getElementById('history-import-file').click()">导入学习数据</button>
@@ -867,7 +888,7 @@ body.is-welcome .welcome-water {margin-top:0;}
     </section>
     <section class="me-data-card" aria-labelledby="offline-title">
       <h2 id="offline-title">离线使用</h2><p id="offline-status" class="me-data-help" role="status" aria-live="polite">首次联网打开后，会准备离线使用。</p>
-      <div class="me-data-actions"><button id="offline-retry" type="button" hidden onclick="XuehaiOffline.prepare()">重新准备离线使用</button></div><p class="me-data-help"><a style="color:inherit" href="./repair" onclick="if(location.protocol==='file:'){event.preventDefault();location.href='v68发布文件/repair.html';}">打不开时修复程序</a></p>
+      <div class="me-data-actions"><button id="offline-retry" type="button" hidden onclick="XuehaiOffline.prepare()">重新准备离线使用</button></div><p class="me-data-help"><a style="color:inherit" href="./repair" onclick="if(location.protocol==='file:'){event.preventDefault();location.href='v70发布文件/repair.html';}">打不开时修复程序</a></p>
     </section>
     <section id="daily-quote" class="daily-quote-footer" aria-label="句子与出处">
       <blockquote class="daily-quote-text" id="daily-quote-text"></blockquote>
@@ -936,7 +957,7 @@ body.is-welcome .welcome-water {margin-top:0;}
   <div class="modal-mask hidden" id="quit-modal">
     <div class="modal-box">
       <h3>退出当前练习？</h3>
-      <p>进度和输入会保存。当前题继续计时，时间到会判分，但不会自动切题；重新进入可继续。</p>
+      <p>确认退出后保存输入并暂停计时，可从首页继续；确认框显示期间仍按原规则计时。</p>
       <div class="modal-btns">
         <button class="modal-cancel" onclick="closeQuitModal()">继续答题</button>
         <button class="modal-ok" onclick="confirmQuit()">退出</button>
@@ -948,7 +969,7 @@ body.is-welcome .welcome-water {margin-top:0;}
   <div class="modal-mask hidden" id="hs-quit-modal">
     <div class="modal-box">
       <h3>退出当前练习？</h3>
-      <p>进度和输入会保存。当前题继续计时，时间到会判分，但不会自动切题；重新进入可继续。</p>
+      <p>确认退出后保存输入并暂停计时，可从首页继续；确认框显示期间仍按原规则计时。</p>
       <div class="modal-btns">
         <button class="modal-cancel" onclick="hsCloseQuitModal()">继续答题</button>
         <button class="modal-ok" onclick="hsConfirmQuit()">退出</button>
@@ -1131,7 +1152,13 @@ body.is-welcome .welcome-water {margin-top:0;}
     </div>
   </div>
 
-  <div id="practice-cancel-modal" class="modal-mask hidden" role="dialog" aria-modal="true" aria-labelledby="practice-cancel-title" aria-describedby="practice-cancel-name practice-cancel-description">
+  <div id="meaning-leave-modal" class="modal-mask hidden" role="dialog" aria-modal="true" aria-labelledby="meaning-leave-title" aria-describedby="meaning-leave-description">
+  <div class="modal-box"><h3 id="meaning-leave-title">释义修改尚未保存</h3><p id="meaning-leave-description"></p>
+    <p id="meaning-leave-error" role="alert" style="color:#b91c1c"></p>
+    <div class="modal-btns" style="flex-direction:column"><button id="meaning-leave-stay" class="modal-cancel">继续编辑</button><button id="meaning-leave-discard" class="modal-cancel">放弃修改</button><button id="meaning-leave-save" class="modal-ok" style="background:#1A56DB">保存并离开</button></div>
+  </div>
+</div>
+<div id="practice-cancel-modal" class="modal-mask hidden" role="dialog" aria-modal="true" aria-labelledby="practice-cancel-title" aria-describedby="practice-cancel-name practice-cancel-description">
     <div class="modal-box">
       <h3 id="practice-cancel-title">取消本次练习？</h3>
       <p id="practice-cancel-name"></p>
@@ -1205,6 +1232,15 @@ const state = {
 const CHEERS = ["Perfect!", "Excellent!", "Great!", "Awesome!", "Brilliant!",
                 "Well done!", "Correct!", "Nice!", "Fantastic!", "Superb!"];
 
+function normalizeSpellingAnswer(value) {
+  return String(value).trim().replace(/[\u2018\u2019]/g, "'").toLowerCase();
+}
+function selectEnglishVoice(voices) {
+  const tag=voice=>String(voice.lang||'').replace(/_/g,'-').toLowerCase();
+  return voices.find(voice=>/^en-gb(?:-|$)/.test(tag(voice)))
+    || voices.find(voice=>/^en(?:-|$)/.test(tag(voice))) || null;
+}
+
 // ===== Web Speech 英式发音 =====
 let currentSpeakEl = null;
 function speakUK(word, el) {
@@ -1221,8 +1257,7 @@ function speakUK(word, el) {
   u.rate = 0.85;
   // 尽量挑英式声音
   const voices = speechSynthesis.getVoices();
-  const ukVoice = voices.find(v => /en-GB|en_GB|uk/i.test(v.lang + v.name))
-               || voices.find(v => /en/i.test(v.lang));
+  const ukVoice = selectEnglishVoice(voices);
   if (ukVoice) u.voice = ukVoice;
 
   currentSpeakEl = el;
@@ -1534,7 +1569,7 @@ function examJudge(timedOut) {
   if (!examSession || examSession.phase !== 'quiz' || examSession.outcome) return;
   const word = EXAM_WORD_BY_ID.get(examSession.queueIds[examSession.pos]);
   const userAns = examSession.input.trim();
-  const correct = !!userAns && userAns.toLowerCase() === word.e.trim().toLowerCase();
+  const correct = !!userAns && normalizeSpellingAnswer(userAns) === normalizeSpellingAnswer(word.e);
   stopTimer();
   const feedback = correct ? (timedOut ? 'Just in time! ✓' : CHEERS[Math.floor(Math.random() * CHEERS.length)] + ' ✓')
     : timedOut ? "Time's up!" : 'Wrong!';
@@ -1626,8 +1661,8 @@ function examResumeSession(key) {
 function quitQuiz() {
   if (!examSession) return;
   document.querySelector('#quit-modal p').textContent = examSession.partIndex < 0
-    ? '进度和输入会保存。当前题继续计时，时间到会判分，但不会自动切题；重新进入可继续。'
-    : 'Part只保留本次练习，重新进入将从第1词开始。当前题继续计时，时间到会判分，但不会自动切题。';
+    ? '确认退出后保存输入并暂停计时，可从首页继续；确认框显示期间仍按原规则计时。'
+    : '确认退出后保存输入并暂停计时，可从首页继续；确认框显示期间仍按原规则计时。';
   examCaptureInput(); examCancelAuto(); examSession.autoSuppressed = true;
   if (examSession.phase === 'quiz' && !examSession.outcome && Date.now() >= examSession.deadline) handleTimeout();
   if (examSession.phase === 'quiz' && examSession.outcome) showNextButton();
@@ -1644,12 +1679,9 @@ function closeQuitModal() {
 }
 function confirmQuit() {
   if (!examSession) return;
-  if (examSession.phase === 'quiz' && !examSession.outcome && Date.now() >= examSession.deadline) handleTimeout();
-  examSession.autoSuppressed = true; examSession.scrollY = window.scrollY; examSaveSession();
-  stopTimer(); document.getElementById('quit-modal').classList.add('hidden');
-  state.wl = examSession.unitKey;
-  if (examSession.partIndex >= 0) examSession = null;
-  showUnits();
+  const unitKey=examSession.unitKey;
+  Portable.pause();
+  state.wl=unitKey;showUnits();
 }
 function examBindEvents() {
   const input = document.getElementById('quiz-input');
@@ -1752,8 +1784,7 @@ function playNextWord() {
   u1.lang = "en-GB";
   u1.rate = 0.85;
   const voices = speechSynthesis.getVoices();
-  const ukVoice = voices.find(v => /en-GB|en_GB|uk/i.test(v.lang + v.name))
-               || voices.find(v => /en/i.test(v.lang));
+  const ukVoice = selectEnglishVoice(voices);
   if (ukVoice) u1.voice = ukVoice;
   u1.onerror = () => { if (isCurrent()) stopWordlistPlayback(); };
   u1.onend = () => {
@@ -63211,7 +63242,7 @@ function hsJudge(timedOut) {
   if (!hsSession || hsSession.phase !== 'quiz' || hsSession.outcome) return;
   const word = HS_PRACTICE_WORD_BY_ID.get(hsSession.queueIds[hsSession.pos]);
   const userAns = hsSession.input.trim();
-  const correct = !!userAns && userAns.toLowerCase() === word.e.trim().toLowerCase();
+  const correct = !!userAns && normalizeSpellingAnswer(userAns) === normalizeSpellingAnswer(word.e);
   hsStopTimer();
   const feedback = correct ? (timedOut ? 'Just in time! ✓' : CHEERS[Math.floor(Math.random() * CHEERS.length)] + ' ✓')
     : timedOut ? "Time's up!" : 'Wrong!';
@@ -63299,8 +63330,8 @@ function hsResumeSession(key) {
 function quitHsQuiz() {
   if (!hsSession) return;
   document.querySelector('#hs-quit-modal p').textContent = hsSession.partIndex < 0
-    ? '进度和输入会保存。当前题继续计时，时间到会判分，但不会自动切题；重新进入可继续。'
-    : '整单元只保留本次练习，重新进入将从第1词开始。当前题继续计时，时间到会判分，但不会自动切题。';
+    ? '确认退出后保存输入并暂停计时，可从首页继续；确认框显示期间仍按原规则计时。'
+    : '确认退出后保存输入并暂停计时，可从首页继续；确认框显示期间仍按原规则计时。';
   hsCaptureInput(); hsCancelAuto(); hsSession.autoSuppressed = true;
   if (hsSession.phase === 'quiz' && !hsSession.outcome && Date.now() >= hsSession.deadline) hsHandleTimeout();
   if (hsSession.phase === 'quiz' && hsSession.outcome) hsShowNextButton();
@@ -63317,12 +63348,9 @@ function hsCloseQuitModal() {
 }
 function hsConfirmQuit() {
   if (!hsSession) return;
-  if (hsSession.phase === 'quiz' && !hsSession.outcome && Date.now() >= hsSession.deadline) hsHandleTimeout();
-  hsSession.autoSuppressed = true; hsSession.scrollY = window.scrollY; hsSaveSession();
-  hsStopTimer(); document.getElementById('hs-quit-modal').classList.add('hidden');
-  hsQuizState.wl = hsSession.unitKey;
-  if (hsSession.partIndex >= 0) hsSession = null;
-  hsReturnToUnitList();
+  const unitKey=hsSession.unitKey;
+  Portable.pause();
+  hsQuizState.wl=unitKey;hsReturnToUnitList();
 }
 function hsBindEvents() {
   const input = document.getElementById('hs-quiz-input');
@@ -63765,7 +63793,7 @@ function renderHistoryDetail(id) {
 
 async function exportHistory() {
   await historyReady;historyFlushTime();await historyWriteQueue;
-  const data={format:'xuehai-history',version:1,appVersion:'v68',dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),records:[...historyRecords.values()]};
+  const data={format:'xuehai-history',version:1,appVersion:'v70',dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),records:[...historyRecords.values()]};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='学海词舟_练习记录_'+historyDay(Date.now())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function validateHistoryImport(data) {
@@ -64480,12 +64508,19 @@ window.MeaningChoices = (() => {
       function updatePreview() { preview.textContent = ids().length ? '保存后显示：\n' + format(src.c, ids()) : '请至少保留一个释义'; }
       function resetDraft() {
         const value = choiceState(module, word), selected = new Set(value.selected ? value.row.senseIds : choices.items.map(item => item.id));
-        boxes.forEach(input => { input.checked = selected.has(input.value); }); updatePreview();
+        boxes.forEach(input => { input.checked = selected.has(input.value); }); pendingDrafts.delete(src.key); updatePreview();
       }
-      boxes.forEach(input => input.addEventListener('change', () => { updatePreview(); status.textContent = '有未保存的修改'; status.classList.remove('is-error'); }));
+      function trackDraft() {
+        updatePreview();
+        rememberDraft(src.key,{module,word,ids:ids(),
+          saved:()=>{updateBadge();refreshSummary(module,words);resetDraft();status.textContent='已保存；下一次新练习生效';controls?.apply('已保存选择，下一次新练习生效');},
+          discarded:()=>{resetDraft();status.textContent='已放弃未保存的修改';}});
+        status.textContent=pendingDrafts.has(src.key)?'有未保存的修改':'';status.classList.remove('is-error');
+      }
+      boxes.forEach(input => input.addEventListener('change',trackDraft));
       const actions = element('div', undefined, 'meaning-actions');
       for (const [label, action] of [
-        ['全选', () => { boxes.forEach(input => { input.checked = true; }); updatePreview(); status.textContent = '有未保存的修改'; }],
+        ['全选', () => { boxes.forEach(input => { input.checked = true; }); trackDraft(); }],
         ['保存选择', () => { save(module, word, ids()); updateBadge(); refreshSummary(module, words); resetDraft(); status.textContent = '已保存；下一次新练习生效'; controls?.apply('已保存选择，下一次新练习生效'); }],
         ['取消修改', () => { resetDraft(); status.textContent = '已恢复为上次保存的选择'; }],
       ]) {
@@ -64498,6 +64533,87 @@ window.MeaningChoices = (() => {
     }
     controls = makeControls(module, words, rows, body);
   }
+  const pendingDrafts = new Map();
+  let pendingLeave = null, leaveTrigger = null, bypassLeave = 0, draftGuardInstalled = false;
+  function rememberDraft(key, entry) {
+    const value = choiceState(entry.module, entry.word);
+    const expected = value.selected ? value.row.senseIds : split(value.src.c).items.map(item => item.id);
+    if (JSON.stringify(entry.ids) === JSON.stringify(expected)) pendingDrafts.delete(key);
+    else pendingDrafts.set(key, entry);
+  }
+  function dismissDraftLeave() {
+    pendingLeave = null;
+    document.getElementById('meaning-leave-modal').classList.add('hidden');
+    if (leaveTrigger?.isConnected) leaveTrigger.focus({preventScroll:true});
+    leaveTrigger = null;
+  }
+  function guardNavigation(action) {
+    if (bypassLeave || !pendingDrafts.size) return action();
+    if (pendingLeave) return false;
+    pendingLeave = action; leaveTrigger = document.activeElement;
+    document.getElementById('meaning-leave-description').textContent = `有 ${pendingDrafts.size} 个单词的释义修改尚未保存，是否保存后离开？`;
+    document.getElementById('meaning-leave-error').textContent = '';
+    document.getElementById('meaning-leave-modal').classList.remove('hidden');
+    document.getElementById('meaning-leave-stay').focus({preventScroll:true});
+    return false;
+  }
+  function finishDraftLeave(keep) {
+    if (!pendingLeave) return;
+    const entries = [...pendingDrafts.values()];
+    try {
+      if (keep) {
+        const next = {version:2, entries:{...data.entries}};
+        for (const entry of entries) {
+          const src = source(entry.module, entry.word), previous = next.entries[src.key];
+          if (!validIds(src.c, entry.ids)) throw Error('请为每个修改过的单词至少保留一个释义，或选择放弃修改。');
+          next.entries[src.key] = {module:entry.module,sourceId:src.id,sourceText:src.c,sourceHash:hash(src.c),kind:'selected',
+            senseIds:split(src.c).items.filter(item=>entry.ids.includes(item.id)).map(item=>item.id),
+            revision:(previous?.revision||0)+1,updatedAt:Date.now()};
+        }
+        validate(next);
+        try { persist(next, true); } catch(error) { failed(error); throw error; }
+      }
+      pendingDrafts.clear();
+      entries.forEach(entry => keep ? entry.saved() : entry.discarded());
+      const action = pendingLeave;
+      dismissDraftLeave();
+      bypassLeave++;
+      try { return action(); } finally { bypassLeave--; }
+    } catch(error) {
+      document.getElementById('meaning-leave-error').textContent = error.message;
+    }
+  }
+  function installDraftGuard() {
+    if (draftGuardInstalled) return;
+    draftGuardInstalled = true;
+    const wrap = (owner,name) => {
+      const original = owner[name]; if (typeof original !== 'function') return;
+      owner[name] = function(...args) {
+        if (owner===AppShell && name==='switchTab' && args[0]===AppShell.tabFor(AppShell.current())) return original.apply(this,args);
+        return guardNavigation(() => original.apply(this,args));
+      };
+    };
+    for (const name of ['show','goHome','enterMode','onWlSelected','goWlSelect','renderWordlist','renderWlList',
+      'enterHighSchoolMode','selectHsBook','selectHsUnit','goHsBookSelect','goHsUnitSelect','renderHsBookList','renderHsUnitList',
+      'enterHsQuizMode','goHsQuizBookSelect','startQuiz','hsStartPractice']) wrap(window,name);
+    for (const name of ['switchTab','backToRoot','enter']) wrap(AppShell,name);
+    wrap(MeaningChoices,'open');
+    const modal=document.getElementById('meaning-leave-modal');
+    document.getElementById('meaning-leave-stay').onclick=dismissDraftLeave;
+    document.getElementById('meaning-leave-discard').onclick=()=>finishDraftLeave(false);
+    document.getElementById('meaning-leave-save').onclick=()=>finishDraftLeave(true);
+    modal.addEventListener('click',event=>{if(event.target===modal)dismissDraftLeave();});
+    modal.addEventListener('keydown',event=>{
+      if(event.key==='Escape'){event.preventDefault();event.stopPropagation();dismissDraftLeave();}
+      if(event.key==='Tab'){
+        const first=document.getElementById('meaning-leave-stay'),last=document.getElementById('meaning-leave-save');
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      }
+    });
+    window.addEventListener('beforeunload',event=>{if(pendingDrafts.size){event.preventDefault();event.returnValue='';}});
+  }
+
   function clearHelp() { document.querySelectorAll('.meaning-page-help,.meaning-controls').forEach(node => node.remove()); }
   function legacyData(value) {
     const result = clone(value);
@@ -64506,7 +64622,7 @@ window.MeaningChoices = (() => {
   }
   return {KEY, empty, initialize, validate, snapshot, replace, save, state: (...args) => clone(choiceState(...args)), effective, browseText,
     source, keyFor, migrate, migrateData, split: (text, version = 2) => clone(split(text, version)), format, count, totals, freeze, prompt, historyWord, checkSession,
-    open, decorate, clearHelp, legacyData, setMode, getMode: () => mode, refreshHub,
+    open, decorate, clearHelp, legacyData, installDraftGuard, hasUnsavedDrafts:()=>pendingDrafts.size>0, setMode, getMode: () => mode, refreshHub,
     validateBrowser, restoreBrowser, browserSnapshot: () => clone(browserPrefs)};
 })();
 
@@ -64574,7 +64690,7 @@ window.HistoryJournal = (() => {
 
 const Portable = (() => {
   'use strict';
-  const FORMAT='xuehai-portable', VERSION=5, APP='v68', META='xuehai_clean_v68:xuehai_portable_meta_v1',PREFS='xuehai_clean_v68:xuehai_portable_preferences_v1';
+  const FORMAT='xuehai-portable', VERSION=5, APP='v70', META='xuehai_clean_v68:xuehai_portable_meta_v1',PREFS='xuehai_clean_v68:xuehai_portable_preferences_v1';
   const KEYS={examProgress:EXAM_PROGRESS_KEY,hsProgress:HS_PROGRESS_KEY,examSessions:EXAM_SESSION_KEY,hsSessions:HS_SESSION_KEY};
   const clone=v=>JSON.parse(JSON.stringify(v));
   const uuid=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -64596,7 +64712,7 @@ const Portable = (() => {
       noticeFadeTimer=setTimeout(()=>{n.classList.add('hidden');n.classList.remove('is-fading');},250);
     },1500);
   }
-  function saveMeta(){LocalPageGuard.ensure();localStorage.setItem(META,JSON.stringify(meta));}
+  function saveMeta(){LocalPageGuard.ensure();localStorage.setItem(META,JSON.stringify(meta));window.dispatchEvent(new Event('xuehai-backup-status'));}
   function dirty(){if(!ready||applying)return;meta.dirty=true;saveMeta();}
   function fail(error){fatal=true;if(!handlingFailure){handlingFailure=true;try{stopTimer();hsStopTimer();historyStopClock();}finally{handlingFailure=false;}}for(const id of ['quiz-input','hs-quiz-input','quiz-submit','hs-quiz-submit'])document.getElementById(id).disabled=true;notice('保存出现异常，已停止计时。请立即导出学习数据。'+error.message,true);}
   function canonical(v){if(Array.isArray(v))return '['+v.map(canonical).join(',')+']';if(object(v))return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}';return JSON.stringify(v);}
@@ -65092,6 +65208,26 @@ const Portable = (() => {
     s.autoSuppressed=true;s.autoNextAt=null;delete s.portablePause;localStorage.setItem(module==='hs'?KEYS.hsSessions:KEYS.examSessions,JSON.stringify(store));dirty();
   }
   function resume(module,key){if(busy||fatal)return;const other=module==='hs'?examSession:hsSession;if(other&&other.phase!=='done')pause();warm(module,key);(module==='hs'?hsResumeSession:examResumeSession)(key);renderResume();}
+  let checkedBackupFile=null,storedBackupFile=null,storedBackupLoaded=false;
+  async function backupStatus(){
+    await readyPromise;
+    if(!ready||lockedOut||fatal||!db)return {kind:'unavailable',exportedAt:null,needsBackup:false,canRemind:false,text:'备份状态暂不可用，请先处理页面提示。'};
+    if(!lastExport&&!storedBackupLoaded){storedBackupFile=await dbGet('lastExport');storedBackupLoaded=true;}
+    const file=lastExport||storedBackupFile;
+    if(file){
+      try{if(checkedBackupFile!==file){await validate(file);checkedBackupFile=file;}}
+      catch(_){return {kind:'unavailable',exportedAt:null,needsBackup:false,canRemind:false,text:'上次导出记录暂不可用，请重新导出并保存备份。'};}
+    }
+    if(lastExport&&file!==lastExport)return backupStatus();
+    const exportedAt=file&&Number.isFinite(file.exportedAt)&&!Number.isNaN(new Date(file.exportedAt).getTime())?file.exportedAt:null;
+    const used=Portable.hasLearningData();
+    if(!used)return {kind:'empty',exportedAt,needsBackup:false,canRemind:false,text:'尚无学习数据，开始学习后可导出备份。'};
+    if(!file)return {kind:'never',exportedAt:null,needsBackup:true,canRemind:!busy,text:'本机尚未导出学习数据，建议导出留存。'};
+    const current=!meta.dirty&&file.metadata.profile===meta.profile&&file.metadata.head===meta.head&&file.checksum===meta.snapshotChecksum;
+    return {kind:current?'current':'changes',exportedAt,needsBackup:!current,canRemind:!busy,
+      text:current?'当前状态与上次导出一致，请确认文件已保存。':'当前学习状态与上次导出已有不同，建议重新导出。'};
+  }
+
   async function downloadLast(){await readyPromise;try{const file=lastExport||await dbGet('lastExport');if(!file){notice('还没有导出过学习数据。');return;}const checked=await validate(file);download(file,file.data.checkinRecovery?.entries?.length?'应急学习数据_含异常打卡原件':'学习数据');notice('已重新生成上次的导出文件；不包含此后新增的练习。');}catch(e){notice('重新下载失败：'+e.message,true);}}
   async function showPrevious(){
     await readyPromise;const file=await dbGet('beforeImport');if(!file){notice('还没有导入前的自动备份。');return;}restoreSelection='beforeImport';
@@ -65120,7 +65256,7 @@ const Portable = (() => {
     const originalDetail=renderHistoryDetail;renderHistoryDetail=id=>{detailSelection=id;originalDetail(id);};
     for(const name of ['examStartNow','hsStartNow']){const original=window[name];window[name]=(...args)=>{if(!LocalPageGuard.canWrite())return;if(fatal||busy){notice('请先导出并处理保存异常，再继续练习。',true);return;}return original(...args);};}
     for(const name of ['scheduleNextQuestion','hsScheduleNextQuestion','startTimer','hsStartTimer','nextQuestion','hsNextQuestion','checkAnswer','hsCheckAnswer','handleTimeout','hsHandleTimeout','historyStartClock']){const original=window[name];window[name]=(...args)=>{if(!LocalPageGuard.canWrite()||fatal)return;if(name==='historyStartClock'){const s=historySession(args[0]),r=s&&historyRecords.get(s.historyId);if(r&&s.phase!=='done'){r.endAt=null;HistoryDisplay.reveal(r.id);}}return original(...args);};}
-    for(const name of ['quitQuiz','quitHsQuiz']){const original=window[name];window[name]=(...args)=>{original(...args);const high=name==='quitHsQuiz',s=high?hsSession:examSession;if(s&&s.partIndex>=0)document.querySelector('#'+(high?'hs-quit-modal':'quit-modal')+' p').textContent='本次练习位置会保存，首页可继续；从单元菜单重新开始会从第1词开始。当前题继续计时，时间到会判分，但不会自动切题。换设备前请返回首页，再到“我”导出学习数据并暂停。';};}
+    for(const name of ['quitQuiz','quitHsQuiz']){const original=window[name];window[name]=(...args)=>{original(...args);const high=name==='quitHsQuiz',s=high?hsSession:examSession;if(s&&s.partIndex>=0)document.querySelector('#'+(high?'hs-quit-modal':'quit-modal')+' p').textContent='确认退出后保存本次位置和输入并暂停计时，首页可继续；从单元菜单重新开始会从第1词开始。确认框显示期间仍按原规则计时。';};}
     const originalRequest=requestPracticeStart;requestPracticeStart=(module,key,force=false)=>{originalRequest(module,key,force);const s=(module==='hs'?hsStore():examStore()).sessions[key+':-1'];if(s?.portablePause&&!force)document.getElementById('practice-start-text').textContent=(module==='hs'?HS_PRACTICE_UNITS:WORDS)[key].label+'。继续已保存的位置与剩余时间，确认后恢复计时。';};
     installRefreshProtection();
     const home=document.getElementById('view-home');const resumeBox=historyNode('div');resumeBox.id='portable-resume';home.append(resumeBox);
@@ -65169,7 +65305,7 @@ const Portable = (() => {
       notice('完整迁移暂不可用：'+e.message,true);
     }finally{LocalPageGuard.arm();if(!lockedOut)unlock();}
   })();
-  return {ready:readyPromise,requestCancelPractice,dismissCancelPractice,confirmCancelPractice,exportData,readFile,confirmImport,resume,showPrevious,restorePrevious,validate,capture,pause,hasLearningData:()=>historyRecords.size>0||MeaningChoices.totals().selected>0||MeaningChoices.totals().stale>0||Object.keys(read(KEYS.examProgress,{})).length>0||Object.keys(read(KEYS.hsProgress,{})).length>0||Object.keys(examStore().sessions).length>0||Object.keys(hsStore().sessions).length>0||Object.keys(Checkins.snapshot([]).days).length>0,getMeta:()=>clone(meta),getLastExport:()=>lastExport,dbGet,description,downloadLast,sha256,markDirty:dirty,rememberView:savePreferences};
+  return {ready:readyPromise,requestCancelPractice,dismissCancelPractice,confirmCancelPractice,exportData,readFile,confirmImport,resume,showPrevious,restorePrevious,validate,capture,pause,hasLearningData:()=>historyRecords.size>0||MeaningChoices.totals().selected>0||MeaningChoices.totals().stale>0||Object.keys(read(KEYS.examProgress,{})).length>0||Object.keys(read(KEYS.hsProgress,{})).length>0||Object.keys(examStore().sessions).length>0||Object.keys(hsStore().sessions).length>0||Object.keys(Checkins.snapshot([]).days).length>0,getMeta:()=>clone(meta),backupStatus,getLastExport:()=>lastExport,dbGet,description,downloadLast,sha256,markDirty:dirty,rememberView:savePreferences};
 })();
 
 </script>
@@ -65263,6 +65399,7 @@ window.AppShell = (() => {
     if(welcome){const used=Portable.hasLearningData();document.querySelector('.welcome-primary span').textContent=used?'继续本地练习':'开始学习';document.querySelector('.welcome-subtitle').textContent=used?'从这里，继续你的学习之旅。':'从这里，开启你的学习之旅。';}
     if(id==='view-dictionary-home')MeaningChoices.refreshHub();
     if(id==='view-me')Checkins.render();
+    window.BackupReminder?.refresh(id);
     if(id==='view-me'||id==='view-home')DailyQuote.refresh();else DailyQuote.stop();
   }
   function withoutMotion(action){window.PageTransitions?.suspend();try{return action();}finally{window.PageTransitions?.resume();}}
@@ -65516,7 +65653,7 @@ window.XuehaiOffline=(()=>{
     if(!worker)return;
     try{
       const message=await new Promise((resolve,reject)=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();reject(Error('离线状态暂不可读'));},5000);channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data);};worker.postMessage({type:'OFFLINE_STATUS'},[channel.port2]);});
-      if(message.ready&&message.version==='v68')show('ready','已准备好离线使用。首次离线前，请确认这里显示此提示。');
+      if(message.ready&&message.version==='v70')show('ready','已准备好离线使用。首次离线前，请确认这里显示此提示。');
       else show('error','离线准备尚未完成，请联网后重试。');
     }catch(_){show('error','暂时无法确认离线准备状态，请联网后重试。');}
   }
@@ -65564,5 +65701,64 @@ try{Portable.ready.then(()=>{
 catch(_){XuehaiBoot.fail('程序暂时未能启动，请重试。');}
 </script>
 
+<script>Portable.ready.then(()=>MeaningChoices.installDraftGuard());</script>
+<script>
+window.BackupReminder = (() => {
+  'use strict';
+  const KEY='xuehai_clean_v68:xuehai_backup_reminder_v1';
+  let installed=false,sequence=0,activeDay=null,scheduled=null,lastStatus=null;
+  let preferences={schema:1,shownDay:null,snoozedDay:null};
+  const validDay=value=>value===null||typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value);
+  function readPreferences(){
+    try{const value=JSON.parse(localStorage.getItem(KEY)||'null');if(value?.schema===1&&validDay(value.shownDay)&&validDay(value.snoozedDay))preferences=value;}catch(_){}
+  }
+  function remember(next){
+    preferences=next;
+    try{const text=JSON.stringify(next);localStorage.setItem(KEY,text);return localStorage.getItem(KEY)===text;}catch(_){return false;}
+  }
+  function hide(){const card=document.getElementById('backup-reminder');if(card)card.hidden=true;activeDay=null;}
+  function renderStatus(value){
+    document.getElementById('backup-last-export').textContent=value.exportedAt===null?'上次导出：本机尚无导出记录':'上次导出：'+historyDate(value.exportedAt);
+    document.getElementById('backup-current-status').textContent=value.text;
+    document.getElementById('backup-status-panel').dataset.kind=value.kind;
+  }
+  async function refresh(view=window.AppShell?.current()){
+    if(!installed)return;
+    const ticket=++sequence;
+    if(document.hidden||!['view-home','view-me'].includes(view)){hide();return;}
+    let value;
+    try{value=await Portable.backupStatus();}catch(_){value={kind:'unavailable',exportedAt:null,needsBackup:false,text:'暂时无法读取备份状态，可稍后重试。'};}
+    if(ticket!==sequence||document.hidden||AppShell.current()!==view)return;
+    lastStatus=value;renderStatus(value);
+    if(view!=='view-home'||!value.needsBackup||!value.canRemind||document.querySelector('.modal-mask:not(.hidden)')||document.querySelector('.app').inert){hide();return;}
+    const today=historyDay(Date.now());
+    if(preferences.snoozedDay===today){hide();return;}
+    if(activeDay!==today){
+      if(preferences.shownDay===today){hide();return;}
+      if(!remember({...preferences,shownDay:today})){hide();return;}
+      activeDay=today;
+    }
+    document.getElementById('backup-reminder-description').textContent=value.kind==='never'?'本机还没有导出过学习数据。留一份备份，换设备时也能接着学。':'当前学习状态与上次导出已有不同，建议重新导出一份备份。';
+    document.getElementById('backup-reminder').hidden=false;
+  }
+  function schedule(){clearTimeout(scheduled);scheduled=setTimeout(()=>refresh(),80);}
+  function snooze(){
+    const today=historyDay(Date.now());remember({...preferences,shownDay:today,snoozedDay:today});hide();
+  }
+  Portable.ready.then(()=>{
+    if(document.querySelector('.app').inert)return;
+    readPreferences();installed=true;
+    document.getElementById('backup-reminder-go').onclick=()=>{AppShell.switchTab('me');document.getElementById('me-data-title').scrollIntoView({block:'start'});};
+    document.getElementById('backup-reminder-snooze').onclick=snooze;
+    window.addEventListener('xuehai-backup-status',schedule);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden){sequence++;hide();}else refresh();});
+    window.addEventListener('pageshow',()=>refresh());
+    setInterval(()=>refresh(),30000);
+    refresh();
+  });
+  return {refresh,snooze,inspect:()=>({key:KEY,preferences:{...preferences},status:lastStatus,activeDay})};
+})();
+
+</script>
 </body>
 </html>

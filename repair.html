@@ -19,7 +19,7 @@
     }
     if(registration.active?.state==='activated'){
      const info=await request(registration.active,'OFFLINE_STATUS');
-     if(info.version==='v68'&&info.ready){status.textContent='程序已修复。可以重新打开学海词舟；原有学习数据保留。';open.hidden=false;return;}
+     if(info.version==='v70'&&info.ready){status.textContent='程序已修复。可以重新打开学海词舟；原有学习数据保留。';open.hidden=false;return;}
     }
     if(!registration.installing&&!registration.waiting&&registration.active?.state!=='activating')throw Error('尚未收到完整的新版程序，请确认新版发布文件全部上传后重试。');
     await pause();
