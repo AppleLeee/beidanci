@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="welcome-root">
 <head>
 <meta charset="UTF-8">
-<meta name="app-version" content="v71">
+<meta name="app-version" content="v75">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1A56DB">
 <style>
@@ -45,10 +45,10 @@ window.XuehaiBoot=(()=>{
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="学海词舟">
-<title>学海词舟 · 本地记录版 v71</title>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=71">
+<title>学海词舟 · 本地记录版 v75</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=75">
 <!-- iOS 主屏图标 -->
-<link id="apple-app-icon" rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=71">
+<link id="apple-app-icon" rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=75">
 
 <!-- PWA manifest（data URI 内嵌） -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -538,7 +538,7 @@ window.XuehaiBoot=(()=>{
 .navigation-stage {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 80;
   overflow: hidden;
   contain: layout paint;
   pointer-events: none;
@@ -815,7 +815,7 @@ body.is-welcome .welcome-water {margin-top:0;}
 </head>
 <body class="is-welcome">
 <section id="startup-panel" role="status" aria-live="polite">
-  <div class="startup-card"><h1 class="startup-brand">学海词舟</h1><p class="startup-version">本地记录版 v71</p>
+  <div class="startup-card"><h1 class="startup-brand">学海词舟</h1><p class="startup-version">本地记录版 v75</p>
     <p id="startup-status">正在打开学海词舟…</p><p id="startup-help">正在读取程序和本机学习记录，请稍候。</p>
     <div id="startup-actions" hidden><button type="button" onclick="XuehaiBoot.retry()">重新打开</button></div>
     <noscript><p>请允许浏览器运行JavaScript后重新打开。学习记录不会自动清空。</p></noscript>
@@ -901,7 +901,7 @@ body.is-welcome .welcome-water {margin-top:0;}
     </section>
     <section class="me-data-card" aria-labelledby="offline-title">
       <h2 id="offline-title">离线使用</h2><p id="offline-status" class="me-data-help" role="status" aria-live="polite">首次联网打开后，会准备离线使用。</p>
-      <div class="me-data-actions"><button id="offline-retry" type="button" hidden onclick="XuehaiOffline.prepare()">重新准备离线使用</button></div><p class="me-data-help"><a style="color:inherit" href="./repair" onclick="if(location.protocol==='file:'){event.preventDefault();location.href='v71发布文件/repair.html';}">打不开时修复程序</a></p>
+      <div class="me-data-actions"><button id="offline-retry" type="button" hidden onclick="XuehaiOffline.prepare()">重新准备离线使用</button></div><p class="me-data-help"><a style="color:inherit" href="./repair" onclick="if(location.protocol==='file:'){event.preventDefault();location.href='v75发布文件/repair.html';}">打不开时修复程序</a></p>
     </section>
     <section id="daily-quote" class="daily-quote-footer" aria-label="句子与出处">
       <blockquote class="daily-quote-text" id="daily-quote-text"></blockquote>
@@ -1213,7 +1213,7 @@ body.is-welcome .welcome-water {margin-top:0;}
     <div class="modal-box"><h3>清空当前历史显示？</h3><p>仅隐藏本设备当前已有的历史记录，完整历史和答题数据仍保留并随备份导出，顶部统计不变。新练习会正常显示；继续隐藏的未完成练习时，原记录会重新显示。导入备份后显示全部历史。</p><div class="modal-btns"><button class="modal-cancel" onclick="document.getElementById('history-clear-modal').classList.add('hidden')">取消</button><button class="modal-ok" onclick="clearHistory()">确认清空</button></div></div>
   </div>
   <div id="history-import-modal" class="modal-mask hidden" role="dialog" aria-modal="true">
-    <div class="modal-box"><h3>导入学习数据？</h3><p id="history-import-text"></p><div class="modal-btns"><button class="modal-cancel" onclick="historyImportPending=null;document.getElementById('history-import-modal').classList.add('hidden')">取消</button><button class="modal-ok" onclick="confirmHistoryImport()">确认恢复</button></div></div>
+    <div class="modal-box"><h3>导入学习数据？</h3><p id="history-import-text"></p><div class="modal-btns"><button class="modal-cancel" onclick="historyImportPending=null;document.getElementById('history-import-modal').classList.add('hidden')">取消</button><button class="modal-ok" onclick="confirmHistoryImport()">确认导入</button></div></div>
   </div>
 
 </div>
@@ -1545,6 +1545,7 @@ function renderQuestion(resume = false) {
   stopTimer(); examSyncState();
   const session = examSession; const word = state.roundQueue[state.pos];
   session.phase = 'quiz';
+  if (PartTranslation.isChinese(session)) { if (resume) PartTranslation.adoptClock(session); else session.translationTimerSeconds = 45; }
   if (!resume) {
     session.input = ''; session.outcome = null; session.autoNextAt = null; session.autoSuppressed = false;
     session.questionStarted = Date.now(); session.deadline = session.questionStarted + getTimeLimit(word) * 1000;
@@ -63819,7 +63820,7 @@ function renderHistoryDetail(id) {
 
 async function exportHistory() {
   await historyReady;historyFlushTime();await historyWriteQueue;
-  const data={format:'xuehai-history',version:1,appVersion:'v71',dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),records:[...historyRecords.values()]};
+  const data={format:'xuehai-history',version:1,appVersion:'v75',dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),records:[...historyRecords.values()]};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='学海词舟_练习记录_'+historyDay(Date.now())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function validateHistoryImport(data) {
@@ -64764,7 +64765,22 @@ window.PartTranslation = (() => {
     return submitted.length === expected.length && submitted.every((value, i) => value === expected[i]);
   }
   const standard = (session, word) => answers(session, word).join(' ');
-  const timeLimit = (session, word) => Math.max(7, 3 + standard(session, word).length);
+  const timeLimit = () => 45;
+  // Convert an unanswered v71 question once. Keep time already spent and all judged history.
+  function adoptClock(session, now = Date.now()) {
+    if (!isChinese(session) || session.phase !== 'quiz' || session.outcome || session.translationTimerSeconds === 45) return;
+    const word = EXAM_WORD_BY_ID.get(session.queueIds[session.pos]);
+    const legacyMs = Math.max(7, 3 + standard(session, word).length) * 1000;
+    if (session.portablePause) {
+      if (!Number.isFinite(session.portablePause.remainingMs)) throw Error('原英译中剩余时间无效，请保留备份');
+      const spent = Math.max(0, legacyMs - session.portablePause.remainingMs);
+      session.portablePause.remainingMs = Math.max(0, 45000 - spent);
+    } else {
+      if (!Number.isFinite(session.questionStarted)) throw Error('原英译中计时起点无效，请保留备份');
+      session.deadline = session.questionStarted + 45000;
+    }
+    session.translationTimerSeconds = 45;
+  }
   function issues(unitKey, partIndex) {
     return WORDS[unitKey].units[partIndex].words.flatMap(word => {
       const value = MeaningChoices.state('exam', word);
@@ -64841,6 +64857,7 @@ window.PartTranslation = (() => {
       if (session.translationRule !== undefined) throw Error('拼写练习不能携带英译中规则');
       return;
     }
+    if (session.translationTimerSeconds !== undefined && session.translationTimerSeconds !== 45) throw Error('英译中计时配置无效');
     if (module !== 'exam' || session.partIndex < 0 || session.translationRule !== 1 || session.meaningPrompts?.version !== 2) throw Error('英译中只支持考研Part练习');
     const words = WORDS[session.unitKey].units[session.partIndex].words, entries = session.meaningPrompts.entries;
     if (session.batchSize !== words.length || Object.keys(entries).length !== words.length || !words.every(word => Object.hasOwn(entries, word.id))) throw Error('英译中必须包含原Part全部词及所选释义');
@@ -64874,13 +64891,13 @@ window.PartTranslation = (() => {
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }
   });
-  return {isChinese,mode,decorateCard,normalizeMeaning,tokens,answers,standard,matches,timeLimit,gate,issues,goChoose,dismissGate,decorateSelection,setupQuestion,checkSession,historyTranslation,checkHistory,validateDirections,restoreDirections,directions:()=>clone(directions)};
+  return {isChinese,mode,decorateCard,normalizeMeaning,tokens,answers,standard,matches,timeLimit,adoptClock,gate,issues,goChoose,dismissGate,decorateSelection,setupQuestion,checkSession,historyTranslation,checkHistory,validateDirections,restoreDirections,directions:()=>clone(directions)};
 })();
 
 
 const Portable = (() => {
   'use strict';
-  const FORMAT='xuehai-portable', VERSION=6, APP='v71', META='xuehai_clean_v68:xuehai_portable_meta_v1',PREFS='xuehai_clean_v68:xuehai_portable_preferences_v1';
+  const FORMAT='xuehai-portable', VERSION=6, APP='v75', META='xuehai_clean_v68:xuehai_portable_meta_v1',PREFS='xuehai_clean_v68:xuehai_portable_preferences_v1';
   const KEYS={examProgress:EXAM_PROGRESS_KEY,hsProgress:HS_PROGRESS_KEY,examSessions:EXAM_SESSION_KEY,hsSessions:HS_SESSION_KEY};
   const clone=v=>JSON.parse(JSON.stringify(v));
   const uuid=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -65010,7 +65027,7 @@ const Portable = (() => {
     for(const [module,store] of [['exam',data.examSessions],['hs',data.hsSessions]])for(const s of Object.values(store.sessions)){
       const unit=(module==='hs'?HS_PRACTICE_UNITS:WORDS)[s.unitKey],map=module==='hs'?HS_PRACTICE_WORD_BY_ID:EXAM_WORD_BY_ID;
       if(s.batchSize>unit.all.length||s.roundNum>10000||s.input.length>200000||s.wrongInRound.length>s.queueIds.length||s.wrongInRound.some(w=>typeof w.c!=='string'||typeof w.userAns!=='string'||typeof w.correctAns!=='string'||!s.queueIds.includes(w.id))||new Set(s.wrongInRound.map(w=>w.id)).size!==s.wrongInRound.length||(s.phase==='review'&&!s.wrongInRound.length))throw Error('纠错阶段或练习数量异常');
-      if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)(map.get(s.queueIds[s.pos]),s)*1000;if(!s.portablePause||!Number.isFinite(s.portablePause.remainingMs)||s.portablePause.remainingMs<0||s.portablePause.remainingMs>Math.max(limit,Math.max(6,4+map.get(s.queueIds[s.pos]).e.length)*1000))throw Error('题目剩余时间异常');}
+      if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)(map.get(s.queueIds[s.pos]),s)*1000;if(!s.portablePause||!Number.isFinite(s.portablePause.remainingMs)||s.portablePause.remainingMs<0||s.portablePause.remainingMs>Math.max(limit,PartTranslation.isChinese(s)&&s.translationTimerSeconds===undefined?Math.max(7,3+PartTranslation.standard(s,map.get(s.queueIds[s.pos])).length)*1000:0,Math.max(6,4+map.get(s.queueIds[s.pos]).e.length)*1000))throw Error('题目剩余时间异常');}
       for(const field of ['selectionStart','selectionEnd','scrollY'])if(s[field]!=null&&(!Number.isFinite(s[field])||s[field]<0))throw Error('输入位置异常');
     }
     const p=data.preferences;
@@ -65396,10 +65413,14 @@ const Portable = (() => {
   function warm(module,key){
     LocalPageGuard.ensure();
     const store=module==='hs'?hsStore():examStore(),s=store.sessions[key];if(!s||!s.portablePause)return;
+    if(module==='exam')PartTranslation.adoptClock(s);
     if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)((module==='hs'?HS_PRACTICE_WORD_BY_ID:EXAM_WORD_BY_ID).get(s.queueIds[s.pos]),s)*1000;const remaining=s.portablePause.remainingMs??limit;s.deadline=Date.now()+remaining;s.questionStarted=s.deadline-limit;}
-    s.autoSuppressed=true;s.autoNextAt=null;delete s.portablePause;localStorage.setItem(module==='hs'?KEYS.hsSessions:KEYS.examSessions,JSON.stringify(store));dirty();
+    s.autoSuppressed=true;s.autoNextAt=null;delete s.portablePause;
+    const storageKey=module==='hs'?KEYS.hsSessions:KEYS.examSessions,text=JSON.stringify(store);volatile.set(storageKey,clone(store));
+    try{localStorage.setItem(storageKey,text);if(localStorage.getItem(storageKey)!==text)throw Error('续练计时未能保存');volatile.delete(storageKey);dirty();}
+    catch(error){fail(error);return false;}
   }
-  function resume(module,key){if(busy||fatal)return;const other=module==='hs'?examSession:hsSession;if(other&&other.phase!=='done')pause();warm(module,key);(module==='hs'?hsResumeSession:examResumeSession)(key);renderResume();}
+  function resume(module,key){if(busy||fatal)return;const other=module==='hs'?examSession:hsSession;if(other&&other.phase!=='done')pause();if(warm(module,key)===false)return;(module==='hs'?hsResumeSession:examResumeSession)(key);renderResume();}
   let checkedBackupFile=null,storedBackupFile=null,storedBackupLoaded=false;
   async function backupStatus(){
     await readyPromise;
@@ -65443,7 +65464,7 @@ const Portable = (() => {
     const persist=historyPersist;historyPersist=r=>{if(!LocalPageGuard.canWrite())return;persist(r);try{dirty();}catch(e){fail(e);}};
     const originalClear=clearHistory;clearHistory=async()=>{LocalPageGuard.ensure();await originalClear();};
     const originalMark=historyMark;historyMark=(module,status)=>{if(status==='ended'){const id=historySession(module)?.historyId||(historyActive?.module===module?historyActive.id:null),store=module==='hs'?hsStore():examStore();if(Object.values(store.sessions).some(s=>s.historyId===id&&s.phase!=='done'))status='waiting';}return originalMark(module,status);};
-    for(const [module,name] of [['exam','examResumeSession'],['hs','hsResumeSession']]){const original=window[name];window[name]=key=>{warm(module,key);return original(key);};}
+    for(const [module,name] of [['exam','examResumeSession'],['hs','hsResumeSession']]){const original=window[name];window[name]=key=>{if(warm(module,key)===false)return false;return original(key);};}
     const originalShow=show;show=id=>{originalShow(id);if(ready&&!applying){if(id==='view-home')renderResume();savePreferences();}};
     const originalDetail=renderHistoryDetail;renderHistoryDetail=id=>{detailSelection=id;originalDetail(id);};
     for(const name of ['examStartNow','hsStartNow']){const original=window[name];window[name]=(...args)=>{if(!LocalPageGuard.canWrite())return;if(fatal||busy){notice('请先导出并处理保存异常，再继续练习。',true);return;}return original(...args);};}
@@ -65574,7 +65595,7 @@ window.AppShell = (() => {
     return 'test';
   }
   function update(id=current()){
-    const welcome=id==='view-welcome',tab=tabFor(id),hidden=welcome||practice.includes(id);
+    const welcome=id==='view-welcome',tab=tabFor(id),hidden=!Object.values(roots).includes(id);
     document.body.classList.toggle('is-welcome',welcome);
     document.documentElement.classList.toggle('welcome-root',welcome);
     document.body.classList.toggle('has-bottom-nav',!hidden);
@@ -65657,6 +65678,7 @@ window.PageTransitions = (() => {
     switch(id){
       case 'view-wl':return id+':'+state.mode;
       case 'view-units':return id+':'+state.wl;
+      case 'view-home':case 'view-dictionary-home':case 'view-me':
       case 'view-hs-book':case 'view-hs-quiz-book':case 'view-history':return id;
       case 'view-hs-units':return id+':'+hsState.currentBook;
       case 'view-hs-quiz-units':return id+':'+hsQuizState.currentBook;
@@ -65678,32 +65700,42 @@ window.PageTransitions = (() => {
   function current() { return [...app.children].find(n => n.id?.startsWith('view-') && !n.classList.contains('hidden')); }
   function enabled() { return installed && !suspended && !reduced.matches && !document.hidden && typeof Element.prototype.animate === 'function'; }
   function snapshot(element, modal=false, container=null) {
-    const rect = element.getBoundingClientRect(), host = document.createElement('div');
+    const host = document.createElement('div');
     host.className = 'navigation-snapshot'; host.setAttribute('aria-hidden','true'); host.inert = true;
     if (container) host.style.position = 'absolute';
     host.style.background = modal ? 'transparent' : getComputedStyle(document.body).backgroundColor;
-    // Shadow DOM keeps the snapshot's IDs and styles out of live-page queries and forms.
     const shadow = host.attachShadow({mode:'closed'}), style = document.createElement('style');
     style.textContent = [...document.querySelectorAll('style')].map(n=>n.textContent).join('\n');
     const clone = element.cloneNode(true); clone.classList.remove('hidden');
-    // Keep the original .app parent so child margins collapse exactly as on the live page.
-    // Positioning the page itself absolutely adds its first child's margin a second time.
-    let frame = null, appRect = null;
+    let frame = null, appRect = null, barClone = null, barRect = null;
     if (!modal) {
       appRect = app.getBoundingClientRect(); frame = app.cloneNode(false);
-      frame.style.cssText += `;position:absolute;margin:0;left:0;top:0;width:${appRect.width}px;`;
+      // Freeze the source page padding: body.has-bottom-nav changes on the live page.
+      frame.style.cssText += `;position:absolute;margin:0;left:0;top:0;width:${appRect.width}px;padding:${getComputedStyle(app).padding};`;
       frame.append(clone); shadow.append(style,frame);
+      const bar = document.getElementById('app-tabbar');
+      if (['view-home','view-dictionary-home','view-history','view-me'].includes(element.id) && bar && !bar.classList.contains('hidden')) {
+        barRect = bar.getBoundingClientRect(); barClone = bar.cloneNode(true); barClone.classList.remove('hidden');
+        // Keep the bar in the same stacking context as its root page, below the covering page.
+        barClone.style.cssText += `;position:absolute;right:auto;bottom:auto;transform:none;margin:0;max-width:none;width:${barRect.width}px;height:${barRect.height}px;`;
+        shadow.append(barClone); host.dataset.includesTabbar = 'true';
+      }
     } else shadow.append(style,clone);
     (container||document.body).append(host);
-    if (frame) {
-      // getBoundingClientRect() uses viewport coordinates; the snapshot uses its host's origin.
-      // Root scrollbar gutters can move that origin away from viewport (0, 0).
+    function align() {
+      if (!frame) return;
       const hostRect = host.getBoundingClientRect();
       frame.style.left = `${appRect.left-hostRect.left}px`;
       frame.style.top = `${appRect.top-hostRect.top}px`;
+      if (barClone) {
+        barClone.style.left = `${barRect.left-hostRect.left}px`;
+        barClone.style.top = `${barRect.top-hostRect.top}px`;
+      }
     }
-    return {host,clone};
+    align();
+    return {host,clone,align,barRect};
   }
+
   function finish(restoreFocus=true) {
     if (!active) return;
     const item = active; active = null;
@@ -65729,7 +65761,8 @@ window.PageTransitions = (() => {
     if (old?.id === id) { original(id); return; } // Word-to-word rendering stays immediate.
     finish(false);
     rememberList(old);
-    const back = id === 'view-home' || parents[id]?.includes(old?.id);
+    const roots = ['view-home','view-dictionary-home','view-history','view-me'];
+    const back = (roots.includes(id) && !roots.includes(old?.id)) || parents[id]?.includes(old?.id);
     if (!old || !enabled()) { original(id);queueMicrotask(()=>settleList(id,back));return; }
     const wasInert = app.inert, appBounds = app.getBoundingClientRect();
     const stage = document.createElement('div'); stage.className='navigation-stage';stage.inert=true;stage.setAttribute('aria-hidden','true');document.body.append(stage);
@@ -65738,8 +65771,8 @@ window.PageTransitions = (() => {
     const stageOrigin = stage.getBoundingClientRect();
     stage.style.left = `${appBounds.left-stageOrigin.left}px`;
     stage.style.right = 'auto'; stage.style.width = `${appBounds.width}px`;
-    const distance = stage.getBoundingClientRect().width;
     const oldPage = snapshot(old,false,stage);
+    const oldBarRect = oldPage.barRect;
     try {
       original(id);
       app.inert = true; document.documentElement.classList.add('navigation-moving');
@@ -65751,6 +65784,13 @@ window.PageTransitions = (() => {
         if(active!==item)return;
         try{
           settleList(id,back);
+          const nextBounds = app.getBoundingClientRect(), bar = document.getElementById('app-tabbar');
+          const nextBarRect = bar && !bar.classList.contains('hidden') ? bar.getBoundingClientRect() : null;
+          const bounds = [appBounds,nextBounds,oldBarRect,nextBarRect].filter(Boolean);
+          const left = Math.min(...bounds.map(rect=>rect.left)), right = Math.max(...bounds.map(rect=>rect.right));
+          stage.style.left = `${left-stageOrigin.left}px`; stage.style.width = `${right-left}px`;
+          oldPage.align();
+          const distance = stage.getBoundingClientRect().width;
           const nextPage = snapshot(document.getElementById(id),false,stage), options = {duration:back?100:260,easing:'linear',fill:'both'};
           nextPage.host.dataset.transitionPage='incoming';oldPage.host.dataset.transitionPage='outgoing';
           // Cover/reveal: the lower page remains completely still.
@@ -65845,7 +65885,7 @@ window.XuehaiOffline=(()=>{
     if(!worker)return;
     try{
       const message=await new Promise((resolve,reject)=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();reject(Error('离线状态暂不可读'));},5000);channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data);};worker.postMessage({type:'OFFLINE_STATUS'},[channel.port2]);});
-      if(message.ready&&message.version==='v71')show('ready','已准备好离线使用。首次离线前，请确认这里显示此提示。');
+      if(message.ready&&message.version==='v75')show('ready','已准备好离线使用。首次离线前，请确认这里显示此提示。');
       else show('error','离线准备尚未完成，请联网后重试。');
     }catch(_){show('error','暂时无法确认离线准备状态，请联网后重试。');}
   }
