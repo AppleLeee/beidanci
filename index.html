@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="welcome-root">
 <head>
 <meta charset="UTF-8">
-<meta name="app-version" content="v70">
+<meta name="app-version" content="v71">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1A56DB">
 <style>
@@ -45,10 +45,10 @@ window.XuehaiBoot=(()=>{
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="学海词舟">
-<title>学海词舟 · 本地记录版 v70</title>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=70">
+<title>学海词舟 · 本地记录版 v71</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=71">
 <!-- iOS 主屏图标 -->
-<link id="apple-app-icon" rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=70">
+<link id="apple-app-icon" rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=71">
 
 <!-- PWA manifest（data URI 内嵌） -->
 <link rel="manifest" href="manifest.webmanifest">
@@ -730,6 +730,19 @@ body.is-welcome .welcome-water {margin-top:0;}
 .backup-reminder-actions button{border:1px solid #d0ddf2;background:transparent;color:#56729c;border-radius:10px;padding:9px 13px;font:inherit;font-size:13px;cursor:pointer;}
 .backup-reminder-actions #backup-reminder-go{border-color:#1a56db;background:#1a56db;color:#fff;}
 
+
+.part-direction-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.part-direction-toggle{width:44px;height:44px;flex:0 0 44px;padding:0;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;font:400 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#5b79aa;border-radius:24px;}
+.part-direction-toggle span{display:grid;place-items:center;width:36px;height:28px;background:#f0f4fb;border-radius:99px;}
+.part-direction-toggle:hover span{background:#e6edfa;color:#1a56db;}
+.part-direction-toggle:focus-visible{outline:2px solid #1a56db;outline-offset:2px;}
+.translation-gate-list{text-align:left;max-height:220px;overflow:auto;list-style:none;padding:0;margin:12px 0 18px;color:#75839a;font-size:13px;line-height:1.9;overflow-wrap:anywhere;}
+.translation-selection-help{border:1px solid #dce6f7;background:#f4f7fc;padding:12px 14px;border-radius:10px;margin:12px 0;font-size:13px;color:#637d9f;}
+.translation-selection-help p{margin:0 0 8px;}.translation-selection-help button{border:0;background:none;padding:8px 0;color:#1a56db;font:inherit;cursor:pointer;}
+#view-quiz.is-chinese-answer .quiz-cn{font-size:32px;overflow-wrap:anywhere;}
+#view-quiz.is-chinese-answer .quiz-input{font-size:20px;}
+#view-quiz.is-chinese-answer .right-ans{font-size:17px;white-space:pre-wrap;overflow-wrap:anywhere;}
+
 .me-backup-actions {display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
 .me-backup-actions button {border:0;background:none;color:#7285a2;font:inherit;font-size:12px;padding:8px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
 @media(max-height:600px) {
@@ -802,7 +815,7 @@ body.is-welcome .welcome-water {margin-top:0;}
 </head>
 <body class="is-welcome">
 <section id="startup-panel" role="status" aria-live="polite">
-  <div class="startup-card"><h1 class="startup-brand">学海词舟</h1><p class="startup-version">本地记录版 v70</p>
+  <div class="startup-card"><h1 class="startup-brand">学海词舟</h1><p class="startup-version">本地记录版 v71</p>
     <p id="startup-status">正在打开学海词舟…</p><p id="startup-help">正在读取程序和本机学习记录，请稍候。</p>
     <div id="startup-actions" hidden><button type="button" onclick="XuehaiBoot.retry()">重新打开</button></div>
     <noscript><p>请允许浏览器运行JavaScript后重新打开。学习记录不会自动清空。</p></noscript>
@@ -888,7 +901,7 @@ body.is-welcome .welcome-water {margin-top:0;}
     </section>
     <section class="me-data-card" aria-labelledby="offline-title">
       <h2 id="offline-title">离线使用</h2><p id="offline-status" class="me-data-help" role="status" aria-live="polite">首次联网打开后，会准备离线使用。</p>
-      <div class="me-data-actions"><button id="offline-retry" type="button" hidden onclick="XuehaiOffline.prepare()">重新准备离线使用</button></div><p class="me-data-help"><a style="color:inherit" href="./repair" onclick="if(location.protocol==='file:'){event.preventDefault();location.href='v70发布文件/repair.html';}">打不开时修复程序</a></p>
+      <div class="me-data-actions"><button id="offline-retry" type="button" hidden onclick="XuehaiOffline.prepare()">重新准备离线使用</button></div><p class="me-data-help"><a style="color:inherit" href="./repair" onclick="if(location.protocol==='file:'){event.preventDefault();location.href='v71发布文件/repair.html';}">打不开时修复程序</a></p>
     </section>
     <section id="daily-quote" class="daily-quote-footer" aria-label="句子与出处">
       <blockquote class="daily-quote-text" id="daily-quote-text"></blockquote>
@@ -941,6 +954,10 @@ body.is-welcome .welcome-water {margin-top:0;}
     </div>
   </div>
 
+  <div class="modal-mask hidden" id="translation-gate-modal" role="dialog" aria-modal="true" aria-labelledby="translation-gate-title" aria-describedby="translation-gate-text">
+    <div class="modal-box"><h3 id="translation-gate-title">请先选择本Part释义</h3><p id="translation-gate-text"></p><ul class="translation-gate-list" id="translation-gate-list"></ul>
+      <div class="modal-btns"><button class="modal-cancel" id="translation-gate-return" onclick="PartTranslation.dismissGate()">返回</button><button class="modal-ok" id="translation-gate-choose" onclick="PartTranslation.goChoose()">去选择释义</button></div>
+    </div></div>
   <!-- v23：开始/继续确认 -->
   <div class="modal-mask hidden" id="practice-start-modal" role="dialog" aria-modal="true" aria-labelledby="practice-start-title" aria-describedby="practice-start-text">
     <div class="modal-box">
@@ -1323,7 +1340,7 @@ function examStore() {
   const value = examRead(EXAM_SESSION_KEY, {last: null, sessions: {}});
   return value && value.sessions && typeof value.sessions === 'object' ? value : {last: null, sessions: {}};
 }
-function examSessionKey(unitKey, partIndex) { return unitKey + ':' + partIndex; }
+function examSessionKey(unitKey, partIndex, direction = 'en') { return unitKey + ':' + partIndex + (direction === 'zh' ? ':zh' : ''); }
 function examCaptureInput() {
   if (!examSession || examSession.phase !== 'quiz') return;
   const input = document.getElementById('quiz-input');
@@ -1336,7 +1353,7 @@ function examSaveSession(capture = true) {
   if (!examSession) return;
   if (capture && !document.getElementById('view-quiz').classList.contains('hidden')) examCaptureInput();
   const store = examStore();
-  const key = examSessionKey(examSession.unitKey, examSession.partIndex);
+  const key = examSessionKey(examSession.unitKey, examSession.partIndex, examSession.direction);
   store.sessions[key] = examSession;
   store.last = key;
   examWrite(EXAM_SESSION_KEY, store);
@@ -1445,12 +1462,14 @@ function showUnits() {
   unit.units.forEach((part, index) => {
     const card = document.createElement('div'); card.className = 'card';
     card.innerHTML = `<div><div class="label">${part.name}</div><div class="sub">${part.words.length} 个词 · 完整练习</div></div><div class="arrow">›</div>`;
+    PartTranslation.decorateCard(card, state.wl, index);
     card.onclick = () => startQuiz(index); list.appendChild(card);
   });
   show('view-units');
 }
 
-function examStartNow(partIndex, forceNew = false) {
+function examStartNow(partIndex, forceNew = false, direction = 'en') {
+  if (direction === 'zh' && (partIndex < 0 || !PartTranslation.gate(state.wl, partIndex))) return false;
   ensureAnswerAudio(); stopTimer();
   if (partIndex < 0 && !forceNew) {
     const key = examSessionKey(state.wl, -1); const store = examStore();
@@ -1463,12 +1482,13 @@ function examStartNow(partIndex, forceNew = false) {
     batchSize: words.length, pos: 0, roundNum: 1, wrongInRound: [], phase: 'quiz',
     input: '', outcome: null, deadline: null, questionStarted: null, autoNextAt: null,
     autoSuppressed: false, scrollY: 0, selectionStart: 0, selectionEnd: 0};
+  if (direction === 'zh') { examSession.direction = 'zh'; examSession.translationRule = 1; }
   MeaningChoices.freeze('exam', examSession, words);
   examSyncState();
   if (!words.length) { examSession.phase = 'done'; examSaveSession(false); examRenderDone(); return; }
   renderQuestion();
 }
-function getTimeLimit(word) { return Math.max(7, 3 + word.e.length); }
+function getTimeLimit(word, session = examSession) { return PartTranslation.isChinese(session) ? PartTranslation.timeLimit(session, word) : Math.max(7, 3 + word.e.length); }
 function examCancelAuto() {
   if (autoNextTO !== null) clearTimeout(autoNextTO);
   autoNextTO = null;
@@ -1531,8 +1551,9 @@ function renderQuestion(resume = false) {
     session.selectionStart = 0; session.selectionEnd = 0; session.scrollY = 0;
   }
   show('view-quiz');
-  document.getElementById('progress-text').innerHTML = `第${session.roundNum}轮 <b>${session.pos + 1}/${session.queueIds.length}</b>`;
+  document.getElementById('progress-text').innerHTML = `${PartTranslation.isChinese(session) ? '英译中 · ' : ''}第${session.roundNum}轮 <b>${session.pos + 1}/${session.queueIds.length}</b>`;
   document.getElementById('quiz-cn').textContent = MeaningChoices.prompt('exam', session, word);
+  PartTranslation.setupQuestion(session, word);
   const input = document.getElementById('quiz-input');
   input.value = session.input; input.className = 'quiz-input'; input.disabled = false;
   const feedback = document.getElementById('quiz-feedback'); feedback.className = 'feedback'; feedback.textContent = '';
@@ -1561,7 +1582,7 @@ function examRenderOutcome() {
   feedback.className = outcome.correct ? 'feedback ok' : 'feedback no';
   feedback.textContent = outcome.feedback;
   if (!outcome.correct) {
-    const answer = document.createElement('span'); answer.className = 'right-ans'; answer.textContent = word.e;
+    const answer = document.createElement('span'); answer.className = 'right-ans'; answer.textContent = PartTranslation.isChinese(examSession) ? PartTranslation.standard(examSession, word) : word.e;
     feedback.appendChild(answer); showNextButton();
   }
 }
@@ -1569,13 +1590,14 @@ function examJudge(timedOut) {
   if (!examSession || examSession.phase !== 'quiz' || examSession.outcome) return;
   const word = EXAM_WORD_BY_ID.get(examSession.queueIds[examSession.pos]);
   const userAns = examSession.input.trim();
-  const correct = !!userAns && normalizeSpellingAnswer(userAns) === normalizeSpellingAnswer(word.e);
+  const correct = PartTranslation.isChinese(examSession) ? PartTranslation.matches(userAns, PartTranslation.answers(examSession, word)) : !!userAns && normalizeSpellingAnswer(userAns) === normalizeSpellingAnswer(word.e);
   stopTimer();
   const feedback = correct ? (timedOut ? 'Just in time! ✓' : CHEERS[Math.floor(Math.random() * CHEERS.length)] + ' ✓')
     : timedOut ? "Time's up!" : 'Wrong!';
-  examSession.outcome = {correct, timedOut, feedback, userAns};
+  const actualFeedback = PartTranslation.isChinese(examSession) ? (correct ? '正确 ✓' : timedOut ? '时间到，请核对标准答案' : '答案不一致，请核对内容与顺序') : feedback;
+  examSession.outcome = {correct, timedOut, feedback:actualFeedback, userAns};
   examRecordAnswer(word, correct);
-  if (!correct) examSession.wrongInRound.push({id: word.id, c: MeaningChoices.prompt('exam', examSession, word), userAns: userAns || '超时', correctAns: word.e});
+  if (!correct) examSession.wrongInRound.push({id: word.id, c: PartTranslation.isChinese(examSession) ? word.e : MeaningChoices.prompt('exam', examSession, word), userAns: userAns || '超时', correctAns: PartTranslation.isChinese(examSession) ? PartTranslation.standard(examSession, word) : word.e});
   examSyncState(); examRenderOutcome(); examSaveSession(false);
   if (correct) { playCorrectSound(); scheduleNextQuestion(timedOut ? 800 : 550); }
 }
@@ -1606,6 +1628,7 @@ function endRound() {
   examSyncState(); examSaveSession(false);
 }
 function examRenderReview() {
+  document.querySelector('#view-review th').textContent = PartTranslation.isChinese(examSession) ? '英文单词' : '中文释义';
   show('view-review');
   document.getElementById('review-title').textContent = `第 ${examSession.roundNum} 轮 · 错 ${examSession.wrongInRound.length} 词`;
   const body = document.getElementById('review-body'); body.innerHTML = '';
@@ -1626,11 +1649,12 @@ function startNextRound() {
   renderQuestion();
 }
 function examRenderDone() {
+  document.querySelector('#view-done h2').textContent = PartTranslation.isChinese(examSession) ? '全部答对！' : '全部拼对！';
   show('view-done');
   const unit = WORDS[examSession.unitKey];
   const button = document.getElementById('exam-continue-batch');
   if (examSession.partIndex >= 0) {
-    document.getElementById('done-sub').textContent = `${unit.label} · ${unit.units[examSession.partIndex].name} ${examSession.batchSize} 词已全部拼对。`;
+    document.getElementById('done-sub').textContent = `${unit.label} · ${unit.units[examSession.partIndex].name} ${examSession.batchSize} 词已全部${PartTranslation.isChinese(examSession) ? '答对' : '拼对'}。`;
     button.classList.add('hidden');
   } else {
     const progress = examUnitProgress(examSession.unitKey);
@@ -1736,6 +1760,7 @@ function renderWordlist() {
     body.appendChild(row);
   });
   MeaningChoices.decorate('exam', unit.all, 'wordlist-body');
+  PartTranslation.decorateSelection();
   show('view-wordlist');
 }
 
@@ -63433,7 +63458,7 @@ function confirmPracticeStart() {
 }
 function startQuiz(partIndex, forceNew = false) {
   if (partIndex < 0) requestPracticeStart('exam', state.wl, forceNew);
-  else examStartNow(partIndex, forceNew);
+  else examStartNow(partIndex, forceNew, PartTranslation.mode(state.wl, partIndex));
 }
 function hsStartPractice(partIndex, forceNew = false) {
   if (partIndex < 0) requestPracticeStart('hs', hsQuizState.wl, forceNew);
@@ -63536,7 +63561,7 @@ function historyEnsure(module, session, legacy = false) {
   const words = session.queueIds.map(key => historyWords(module).get(key)).filter(Boolean)
     .map(word => MeaningChoices.historyWord(module, session, word));
   const now = Date.now();
-  const record = {id, schema: 1, module, mode: session.partIndex < 0 ? 'batch' : 'full',
+  const record = {id, schema: 1, module, ...(PartTranslation.isChinese(session) ? {direction:'zh'} : {}), mode: session.partIndex < 0 ? 'batch' : 'full',
     unitKey: session.unitKey, label: unit.label,
     partName: session.partIndex < 0 ? '' : module === 'hs' ? '整单元' : unit.units[session.partIndex].name,
     total: session.batchSize, words, partial: legacy, startAt: legacy ? null : now,
@@ -63596,7 +63621,7 @@ function historyInstall(module) {
   const doneName = high ? 'hsRenderDone' : 'examRenderDone';
   const start = window[startName], resume = window[resumeName], judge = window[judgeName], done = window[doneName];
   window[startName] = async (...args) => {
-    await historyReady; start(...args);
+    await historyReady; if (start(...args) === false) return;
     const s = historySession(module);
     if (s && s.phase !== 'done') {
       historyEnsure(module, s); historyStartClock(module);
@@ -63645,7 +63670,7 @@ window.addEventListener('pagehide', () => {
 setInterval(historyFlushTime, 5000);
 
 const historyStatusText = {running: '进行中', waiting: '待继续', completed: '已完成', ended: '已结束'};
-function historyType(r) { return (r.module === 'hs' ? '高中 · ' : '考研 · ') + (r.mode === 'batch' ? r.module === 'hs' ? '分批练习' : 'Unit学海练习' : r.module === 'hs' ? '整单元练习' : 'Part练习'); }
+function historyType(r) { if (r.module === 'exam' && r.direction === 'zh') return '考研 · Part英译中'; return (r.module === 'hs' ? '高中 · ' : '考研 · ') + (r.mode === 'batch' ? r.module === 'hs' ? '分批练习' : 'Unit学海练习' : r.module === 'hs' ? '整单元练习' : 'Part练习'); }
 function historyDate(value) { return value == null ? '续练记录' : new Intl.DateTimeFormat('zh-CN', {timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date(value)); }
 function historyDay(value) { const parts=new Intl.DateTimeFormat('en', {timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(value));const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));return p.year+'-'+p.month+'-'+p.day; }
 function historyDuration(ms) { const seconds=Math.floor(ms/1000);return Math.floor(seconds/60)+'分'+seconds%60+'秒'; }
@@ -63785,6 +63810,7 @@ function renderHistoryDetail(id) {
       head.append(historyNode('strong',a.word.e),historyNode('span',a.correct?'正确':a.timedOut?'超时答错':'错误','history-result'+(a.correct?'':' wrong')));
       item.append(head,historyNode('div',a.word.p,'history-phonetic'),historyNode('div',a.word.c,'history-definition'));
       const answer=historyNode('div','','history-input');answer.append(historyNode('span','你的答案','history-input-label'),historyNode('span',a.input||'未输入','history-input-value'+(a.correct?' history-good':' history-bad')));
+      if(r.direction==='zh')item.append(historyNode('div','标准答案：'+a.word.translation.answers.join(' '),'history-definition'));
       item.append(answer,historyNode('div',historyDate(a.judgedAt),'history-answer-time'));section.append(item);
     });body.append(section);
   });
@@ -63793,7 +63819,7 @@ function renderHistoryDetail(id) {
 
 async function exportHistory() {
   await historyReady;historyFlushTime();await historyWriteQueue;
-  const data={format:'xuehai-history',version:1,appVersion:'v70',dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),records:[...historyRecords.values()]};
+  const data={format:'xuehai-history',version:1,appVersion:'v71',dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),records:[...historyRecords.values()]};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='学海词舟_练习记录_'+historyDay(Date.now())+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function validateHistoryImport(data) {
@@ -63801,7 +63827,7 @@ function validateHistoryImport(data) {
   const ids=new Set();
   data.records.forEach(r=>{
     if(!r||typeof r.id!=='string'||!r.id||ids.has(r.id)||!['exam','hs'].includes(r.module)||!['batch','full'].includes(r.mode)||!Object.keys(historyStatusText).includes(r.status)||typeof r.label!=='string'||!Number.isFinite(r.total)||r.total<0||!Number.isFinite(r.createdAt)||!Number.isFinite(r.lastAt)||!Number.isFinite(r.activeMs)||r.activeMs<0||!Array.isArray(r.words)||!Array.isArray(r.attempts)||!Array.isArray(r.visits))throw Error('备份包含无效记录，未导入。');
-    PracticeUndo.validateRecord(r);ids.add(r.id);const keys=new Set();const wordValid=w=>w&&typeof w.e==='string'&&typeof w.c==='string'&&typeof w.p==='string';
+    PracticeUndo.validateRecord(r); PartTranslation.checkHistory(r); ids.add(r.id);const keys=new Set();const wordValid=w=>w&&typeof w.e==='string'&&typeof w.c==='string'&&typeof w.p==='string';
     if(r.words.some(w=>!wordValid(w))||r.attempts.some(a=>!a||typeof a.key!=='string'||keys.has(a.key)||!keys.add(a.key)||!wordValid(a.word)||!Number.isInteger(a.round)||a.round<1||typeof a.input!=='string'||typeof a.correct!=='boolean'||typeof a.timedOut!=='boolean'||!Number.isFinite(a.judgedAt))||r.visits.some(v=>!v||!Number.isFinite(v.startAt)||(v.endAt!=null&&!Number.isFinite(v.endAt))))throw Error('备份中的答题明细无效，未导入。');
   });return data.records;
 }
@@ -64329,7 +64355,8 @@ window.MeaningChoices = (() => {
   function historyWord(module, session, word) {
     const c = prompt(module, session, word), value = session.meaningPrompts.entries[word.id];
     return {id: word.id, e: word.e, p: word.p || '', c, originalC: value.sourceText,
-      meaning: {sourceKey: value.sourceKey, sourceHash: value.sourceHash, kind: value.kind, choiceRevision: value.choiceRevision}};
+      meaning: {sourceKey: value.sourceKey, sourceHash: value.sourceHash, kind: value.kind, choiceRevision: value.choiceRevision},
+      ...(PartTranslation.isChinese(session) ? {translation:PartTranslation.historyTranslation(session, word)} : {})};
   }
   function checkSession(module, session) {
     if (!session.meaningPrompts) return; // v1 backups and old on-device sessions.
@@ -64688,9 +64715,172 @@ window.HistoryJournal = (() => {
 })();
 
 
+// v71: Part-only direction overlay. Dictionaries, choice IDs and spelling progress remain intact.
+window.PartTranslation = (() => {
+  'use strict';
+  const clone = v => JSON.parse(JSON.stringify(v));
+  const object = v => !!v && typeof v === 'object' && !Array.isArray(v);
+  let directions = {}, blocked = null, selectionContext = null, gateTrigger = null;
+  const isChinese = s => s?.direction === 'zh';
+  const key = (unit, part) => unit + ':' + part;
+  function validateDirections(value) {
+    if (value === undefined) return;
+    if (!object(value) || Object.keys(value).length > 500) throw Error('Part练习方向格式不正确');
+    for (const [id, direction] of Object.entries(value)) {
+      const [unit, index, extra] = id.split(':');
+      if (extra !== undefined || !WORDS[unit] || !/^(0|[1-9]\d*)$/.test(index) || !WORDS[unit].units[Number(index)] || !['en', 'zh'].includes(direction)) throw Error('Part练习方向无效');
+    }
+  }
+  function restoreDirections(value) { validateDirections(value); directions = clone(value || {}); }
+  const mode = (unit, part) => directions[key(unit, part)] || 'en';
+  function normalizeMeaning(text) {
+    const pairs = {'(': ')', '（': '）', '[': ']', '【': '】'}, closes = new Set(Object.values(pairs)), stack = [];
+    let result = '';
+    // usage. is a source label, like a part of speech, rather than answer text.
+    for (const char of text.replace(/^usage\.\s*/iu, '')) {
+      if (Object.hasOwn(pairs, char)) { stack.push(pairs[char]); continue; }
+      if (closes.has(char)) { if (stack.pop() !== char) throw Error('所选释义括号不完整，请重新选择该词释义'); continue; }
+      if (!stack.length) result += char;
+    }
+    if (stack.length) throw Error('所选释义括号不完整，请重新选择该词释义');
+    result = result.replace(/(?:…+|⋯+|\.{2,}|．{2,})/gu, '什么').replace(/[\p{P}\s]/gu, '');
+    return result;
+  }
+  function tokens(sourceText, ids, version = 2) {
+    const parts = MeaningChoices.split(sourceText, version).items, selected = new Set(ids);
+    if (!Array.isArray(ids) || !ids.length || selected.size !== ids.length || ids.some(id => !parts.some(p => p.id === id))) throw Error('所选释义编号无效');
+    const result = parts.filter(p => selected.has(p.id)).map(p => normalizeMeaning(p.text)).filter(Boolean);
+    if (!result.length) throw Error('所选释义只有括号说明，没有可输入的答案，请补选实际释义');
+    return result;
+  }
+  function answers(session, word) {
+    if (!isChinese(session) || session.translationRule !== 1) throw Error('英译中判分版本不正确');
+    const row = session.meaningPrompts?.entries[word.id];
+    if (!row || row.kind !== 'selected') throw Error('英译中缺少已确认的释义快照');
+    return tokens(row.sourceText, row.senseIds, session.meaningPrompts.version);
+  }
+  function matches(input, expected) {
+    const submitted = input.trim() ? input.trim().split(/\s+/u) : [];
+    return submitted.length === expected.length && submitted.every((value, i) => value === expected[i]);
+  }
+  const standard = (session, word) => answers(session, word).join(' ');
+  const timeLimit = (session, word) => Math.max(7, 3 + standard(session, word).length);
+  function issues(unitKey, partIndex) {
+    return WORDS[unitKey].units[partIndex].words.flatMap(word => {
+      const value = MeaningChoices.state('exam', word);
+      if (!value.selected) return [{word, reason: value.stale ? '来源待复核' : '未选择释义'}];
+      try { tokens(value.src.c, value.row.senseIds); return []; }
+      catch (error) { return [{word, reason: error.message}]; }
+    });
+  }
+  function dismissGate() {
+    document.getElementById('translation-gate-modal').classList.add('hidden'); blocked = null;
+    if (gateTrigger?.isConnected) gateTrigger.focus({preventScroll:true});
+    gateTrigger = null;
+  }
+  function gate(unitKey, partIndex) {
+    const missing = issues(unitKey, partIndex);
+    if (!missing.length) return true;
+    blocked = {unitKey, partIndex}; gateTrigger = document.activeElement;
+    const unit = WORDS[unitKey], name = unit.label + ' · ' + unit.units[partIndex].name;
+    document.getElementById('translation-gate-text').textContent = name + ' 还有 ' + missing.length + ' 个词需要确认释义。请先完成选择，再开始英译中。';
+    const list = document.getElementById('translation-gate-list'); list.replaceChildren();
+    for (const item of missing) { const li = document.createElement('li'); li.textContent = item.word.e + ' · ' + item.reason; list.append(li); }
+    document.getElementById('translation-gate-modal').classList.remove('hidden');
+    document.getElementById('translation-gate-choose').focus({preventScroll:true});
+    return false;
+  }
+  function goChoose() {
+    if (!blocked) return;
+    selectionContext = clone(blocked); const target = clone(blocked); dismissGate();
+    MeaningChoices.setMode('select'); state.mode = 'wordlist'; state.wl = target.unitKey;
+    MeaningChoices.restoreBrowser({...MeaningChoices.browserSnapshot(), 'exam:select':{unitKey:target.unitKey,query:'',status:'all'}});
+    renderWordlist();
+    const first = issues(target.unitKey, target.partIndex)[0];
+    if (first) {
+      const row = [...document.querySelectorAll('#wordlist-body [data-meaning-key]')].find(n => n.dataset.meaningKey === MeaningChoices.keyFor('exam', first.word));
+      const editor = row?.querySelector('details'); if (editor) { editor.open = true; editor.querySelector('summary').focus({preventScroll:true}); row.scrollIntoView({block:'center'}); }
+    }
+  }
+  function decorateSelection() {
+    document.getElementById('translation-selection-help')?.remove();
+    if (!selectionContext || selectionContext.unitKey !== state.wl || MeaningChoices.getMode() !== 'select') return;
+    const {unitKey, partIndex} = selectionContext, part = WORDS[unitKey].units[partIndex];
+    const box = document.createElement('section'); box.id = 'translation-selection-help'; box.className = 'translation-selection-help';
+    const copy = document.createElement('p'); copy.textContent = part.name + ' 英译中：需确认本Part全部 ' + part.words.length + ' 词的释义。';
+    const back = document.createElement('button'); back.type = 'button'; back.textContent = '返回Part列表';
+    back.onclick = () => { state.mode = 'quiz'; state.wl = unitKey; showUnits(); };
+    box.append(copy, back); document.getElementById('wordlist-body').before(box);
+  }
+  function decorateCard(card, unitKey, partIndex) {
+    const actions = document.createElement('div'); actions.className = 'part-direction-actions';
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'part-direction-toggle';
+    const label = document.createElement('span'); button.append(label);
+    const paint = () => {
+      const chinese = mode(unitKey, partIndex) === 'zh'; label.textContent = chinese ? '中' : '英';
+      const title = chinese ? '当前写中文，点击切换为拼写英文' : '当前拼写英文，点击切换为写中文';
+      button.title = title; button.setAttribute('aria-label', title); button.dataset.direction = chinese ? 'zh' : 'en';
+    };
+    button.onclick = event => {
+      event.stopPropagation(); if (!LocalPageGuard.canWrite()) return;
+      directions[key(unitKey, partIndex)] = mode(unitKey, partIndex) === 'zh' ? 'en' : 'zh';
+      paint(); Portable.rememberView();
+    };
+    paint(); actions.append(button, card.querySelector('.arrow')); card.append(actions);
+  }
+  function setupQuestion(session, word) {
+    const chinese = isChinese(session), view = document.getElementById('view-quiz');
+    view.classList.toggle('is-chinese-answer', chinese);
+    view.querySelector('.quiz-hint').textContent = chinese ? '按所选释义原顺序输入中文，用空格分隔；不输入括号内容，省略号写“什么”' : '根据中文释义拼写英文单词，回车或点击提交';
+    const input = document.getElementById('quiz-input'); input.placeholder = chinese ? '输入中文释义，用空格分隔' : '输入英文单词'; input.lang = chinese ? 'zh-CN' : 'en';
+    if (chinese) { answers(session, word); document.getElementById('quiz-cn').textContent = word.e; }
+  }
+  function checkSession(module, session) {
+    if (session.direction !== undefined && !['en', 'zh'].includes(session.direction)) throw Error('练习方向不正确');
+    if (!isChinese(session)) {
+      if (session.translationRule !== undefined) throw Error('拼写练习不能携带英译中规则');
+      return;
+    }
+    if (module !== 'exam' || session.partIndex < 0 || session.translationRule !== 1 || session.meaningPrompts?.version !== 2) throw Error('英译中只支持考研Part练习');
+    const words = WORDS[session.unitKey].units[session.partIndex].words, entries = session.meaningPrompts.entries;
+    if (session.batchSize !== words.length || Object.keys(entries).length !== words.length || !words.every(word => Object.hasOwn(entries, word.id))) throw Error('英译中必须包含原Part全部词及所选释义');
+    words.forEach(word => answers(session, word));
+  }
+  function historyTranslation(session, word) {
+    const row = session.meaningPrompts.entries[word.id];
+    return {version:1, senseIds:[...row.senseIds], answers:answers(session, word)};
+  }
+  function checkHistory(record) {
+    if (record.direction !== undefined && !['en', 'zh'].includes(record.direction)) throw Error('历史练习方向无效');
+    if (record.direction !== 'zh') {
+      if ([...record.words, ...record.attempts.map(a => a.word)].some(w => w.translation !== undefined)) throw Error('历史缺少英译中方向标记');
+      return;
+    }
+    if (record.module !== 'exam' || record.mode !== 'full') throw Error('英译中历史模块无效');
+    for (const word of [...record.words, ...record.attempts.map(a => a.word)]) {
+      const value = word.translation;
+      if (!object(value) || value.version !== 1 || typeof word.originalC !== 'string' || !Array.isArray(value.answers) || !value.answers.length || !value.answers.every(v => typeof v === 'string' && v.length > 0)) throw Error('英译中历史答案不完整');
+      if (JSON.stringify(tokens(word.originalC, value.senseIds)) !== JSON.stringify(value.answers) || MeaningChoices.format(word.originalC, value.senseIds) !== word.c) throw Error('英译中历史答案与所选释义不符');
+    }
+    for (const attempt of record.attempts) if (matches(attempt.input, attempt.word.translation.answers) !== attempt.correct) throw Error('英译中历史判分与答案不符');
+  }
+  document.addEventListener('keydown', event => {
+    const modal = document.getElementById('translation-gate-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
+    if (event.key === 'Escape') { event.preventDefault(); dismissGate(); }
+    if (event.key === 'Tab') {
+      const first = document.getElementById('translation-gate-return'), last = document.getElementById('translation-gate-choose');
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+  return {isChinese,mode,decorateCard,normalizeMeaning,tokens,answers,standard,matches,timeLimit,gate,issues,goChoose,dismissGate,decorateSelection,setupQuestion,checkSession,historyTranslation,checkHistory,validateDirections,restoreDirections,directions:()=>clone(directions)};
+})();
+
+
 const Portable = (() => {
   'use strict';
-  const FORMAT='xuehai-portable', VERSION=5, APP='v70', META='xuehai_clean_v68:xuehai_portable_meta_v1',PREFS='xuehai_clean_v68:xuehai_portable_preferences_v1';
+  const FORMAT='xuehai-portable', VERSION=6, APP='v71', META='xuehai_clean_v68:xuehai_portable_meta_v1',PREFS='xuehai_clean_v68:xuehai_portable_preferences_v1';
   const KEYS={examProgress:EXAM_PROGRESS_KEY,hsProgress:HS_PROGRESS_KEY,examSessions:EXAM_SESSION_KEY,hsSessions:HS_SESSION_KEY};
   const clone=v=>JSON.parse(JSON.stringify(v));
   const uuid=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -64755,7 +64945,7 @@ const Portable = (() => {
       }catch(error){try{tx?.abort();}catch(_){}reject(error);}
     });
   }
-  function prefs(){const view=[...document.querySelectorAll('.app > div[id^="view-"]')].find(n=>!n.classList.contains('hidden'))?.id||'view-home';const module=['view-quiz','view-review','view-done'].includes(view)?'exam':['view-hs-quiz','view-hs-quiz-review','view-hs-quiz-done'].includes(view)?'hs':null;const session=module==='exam'?examSession:module==='hs'?hsSession:null;return {meaningMode:MeaningChoices.getMode(),meaningBrowser:MeaningChoices.browserSnapshot(),practice:session?{module,key:session.unitKey+':'+session.partIndex}:null,exam:{mode:state.mode,wl:state.wl,unitIdx:state.unitIdx},hsBrowse:{currentBook:hsState.currentBook,currentUnit:hsState.currentUnit},hsQuiz:{currentBook:hsQuizState.currentBook,currentUnit:hsQuizState.currentUnit,wl:hsQuizState.wl||null,selectionMode:hsQuizState.selectionMode,practiceMode:hsQuizState.practiceMode},view,scrollY:window.scrollY,historySelection:detailSelection};}
+  function prefs(){const view=[...document.querySelectorAll('.app > div[id^="view-"]')].find(n=>!n.classList.contains('hidden'))?.id||'view-home';const module=['view-quiz','view-review','view-done'].includes(view)?'exam':['view-hs-quiz','view-hs-quiz-review','view-hs-quiz-done'].includes(view)?'hs':null;const session=module==='exam'?examSession:module==='hs'?hsSession:null;return {meaningMode:MeaningChoices.getMode(),meaningBrowser:MeaningChoices.browserSnapshot(),practice:session?{module,key:(module==='hs'?hsSessionKey:examSessionKey)(session.unitKey,session.partIndex,session.direction)}:null,exam:{mode:state.mode,wl:state.wl,unitIdx:state.unitIdx,partDirections:PartTranslation.directions()},hsBrowse:{currentBook:hsState.currentBook,currentUnit:hsState.currentUnit},hsQuiz:{currentBook:hsQuizState.currentBook,currentUnit:hsQuizState.currentUnit,wl:hsQuizState.wl||null,selectionMode:hsQuizState.selectionMode,practiceMode:hsQuizState.practiceMode},view,scrollY:window.scrollY,historySelection:detailSelection};}
   function capture(){return {meanings:MeaningChoices.snapshot(),examProgress:read(KEYS.examProgress,{}),hsProgress:read(KEYS.hsProgress,{}),examSessions:clone(examStore()),hsSessions:clone(hsStore()),records:clone([...historyRecords.values()]),checkins:Checkins.snapshot([...historyRecords.values()]),...(Checkins.hasRecovery()?{checkinRecovery:Checkins.recoverySnapshot()}:{}),preferences:prefs()};}
   function freezeSession(s,now){
     if(!s||s.phase==='done'||s.portablePause)return s;
@@ -64771,7 +64961,7 @@ const Portable = (() => {
     const data=capture();
     for(const [module,field] of [['exam','examSessions'],['hs','hsSessions']]){
       const current=module==='hs'?hsSession:examSession;
-      if(current){const key=current.unitKey+':'+current.partIndex;data[field].sessions[key]=clone(current);if((module==='exam'&&examVisible)||(module==='hs'&&hsVisible))data[field].last=key;}
+      if(current){const key=(module==='hs'?hsSessionKey:examSessionKey)(current.unitKey,current.partIndex,current.direction);data[field].sessions[key]=clone(current);if((module==='exam'&&examVisible)||(module==='hs'&&hsVisible))data[field].last=key;}
       Object.values(data[field].sessions).forEach(s=>freezeSession(s,now));
     }
     const unfinished=new Set(Object.values(data.examSessions.sessions).concat(Object.values(data.hsSessions.sessions)).filter(s=>s.phase!=='done').map(s=>s.historyId));
@@ -64788,9 +64978,9 @@ const Portable = (() => {
     const units=module==='hs'?HS_PRACTICE_UNITS:WORDS,map=module==='hs'?HS_PRACTICE_WORD_BY_ID:EXAM_WORD_BY_ID,revision=module==='hs'?HS_REVISION:EXAM_REVISION;
     if(Object.keys(store.sessions).length>500)throw Error('未完成练习数量异常');
     for(const [key,s] of Object.entries(store.sessions)){
-      if(!object(s)||!own(units,s.unitKey)||s.revision!==revision||!Number.isInteger(s.partIndex)||s.partIndex< -1||s.partIndex>=units[s.unitKey].units.length||key!==s.unitKey+':'+s.partIndex||!Array.isArray(s.queueIds)||(s.phase!=='done'&&!s.queueIds.length)||s.queueIds.length>10000||!s.queueIds.every(id=>map.has(id))||new Set(s.queueIds).size!==s.queueIds.length||!['quiz','review','done'].includes(s.phase)||!Number.isInteger(s.pos)||s.pos<0||s.pos>s.queueIds.length||!Number.isInteger(s.roundNum)||s.roundNum<1||!Number.isInteger(s.batchSize)||s.batchSize<0||(s.phase!=='done'&&s.batchSize===0)||typeof s.input!=='string'||!Array.isArray(s.wrongInRound)||!s.wrongInRound.every(w=>object(w)&&map.has(w.id))||!(s.outcome===null||object(s.outcome)&&typeof s.outcome.correct==='boolean'&&typeof s.outcome.feedback==='string'))throw Error('未完成练习内容不完整或词库不匹配');
+      if(!object(s)||!own(units,s.unitKey)||s.revision!==revision||!Number.isInteger(s.partIndex)||s.partIndex< -1||s.partIndex>=units[s.unitKey].units.length||key!==(module==='hs'?hsSessionKey:examSessionKey)(s.unitKey,s.partIndex,s.direction)||!Array.isArray(s.queueIds)||(s.phase!=='done'&&!s.queueIds.length)||s.queueIds.length>10000||!s.queueIds.every(id=>map.has(id))||new Set(s.queueIds).size!==s.queueIds.length||!['quiz','review','done'].includes(s.phase)||!Number.isInteger(s.pos)||s.pos<0||s.pos>s.queueIds.length||!Number.isInteger(s.roundNum)||s.roundNum<1||!Number.isInteger(s.batchSize)||s.batchSize<0||(s.phase!=='done'&&s.batchSize===0)||typeof s.input!=='string'||!Array.isArray(s.wrongInRound)||!s.wrongInRound.every(w=>object(w)&&map.has(w.id))||!(s.outcome===null||object(s.outcome)&&typeof s.outcome.correct==='boolean'&&typeof s.outcome.feedback==='string'))throw Error('未完成练习内容不完整或词库不匹配');
       const ids=new Set(units[s.unitKey].all.map(w=>w.id));if(!s.queueIds.every(id=>ids.has(id)))throw Error('未完成练习的单元归属不正确');
-      PracticeUndo.validateSession(s); MeaningChoices.checkSession(module,s);
+      PracticeUndo.validateSession(s); MeaningChoices.checkSession(module,s); PartTranslation.checkSession(module,s);
       if(s.phase==='quiz'&&s.pos>=s.queueIds.length)throw Error('题目位置超出词表');
       if(s.portablePause&&(!object(s.portablePause)||!(s.portablePause.remainingMs===null||Number.isFinite(s.portablePause.remainingMs)&&s.portablePause.remainingMs>=0&&s.portablePause.remainingMs<=3600000)))throw Error('剩余时间无效');
     }
@@ -64820,12 +65010,13 @@ const Portable = (() => {
     for(const [module,store] of [['exam',data.examSessions],['hs',data.hsSessions]])for(const s of Object.values(store.sessions)){
       const unit=(module==='hs'?HS_PRACTICE_UNITS:WORDS)[s.unitKey],map=module==='hs'?HS_PRACTICE_WORD_BY_ID:EXAM_WORD_BY_ID;
       if(s.batchSize>unit.all.length||s.roundNum>10000||s.input.length>200000||s.wrongInRound.length>s.queueIds.length||s.wrongInRound.some(w=>typeof w.c!=='string'||typeof w.userAns!=='string'||typeof w.correctAns!=='string'||!s.queueIds.includes(w.id))||new Set(s.wrongInRound.map(w=>w.id)).size!==s.wrongInRound.length||(s.phase==='review'&&!s.wrongInRound.length))throw Error('纠错阶段或练习数量异常');
-      if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)(map.get(s.queueIds[s.pos]))*1000;if(!s.portablePause||!Number.isFinite(s.portablePause.remainingMs)||s.portablePause.remainingMs<0||s.portablePause.remainingMs>Math.max(limit,Math.max(6,4+map.get(s.queueIds[s.pos]).e.length)*1000))throw Error('题目剩余时间异常');}
+      if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)(map.get(s.queueIds[s.pos]),s)*1000;if(!s.portablePause||!Number.isFinite(s.portablePause.remainingMs)||s.portablePause.remainingMs<0||s.portablePause.remainingMs>Math.max(limit,Math.max(6,4+map.get(s.queueIds[s.pos]).e.length)*1000))throw Error('题目剩余时间异常');}
       for(const field of ['selectionStart','selectionEnd','scrollY'])if(s[field]!=null&&(!Number.isFinite(s[field])||s[field]<0))throw Error('输入位置异常');
     }
     const p=data.preferences;
     if(p.meaningMode!==undefined&&!['study','select'].includes(p.meaningMode))throw Error('释义页面模式不正确');
     MeaningChoices.validateBrowser(p.meaningBrowser);
+    PartTranslation.validateDirections(p.exam?.partDirections);
     if(!object(p.exam)||!object(p.hsBrowse)||!object(p.hsQuiz)||!['quiz','wordlist',null].includes(p.exam.mode)||(p.exam.wl!==null&&!own(WORDS,p.exam.wl))||(p.hsBrowse.currentBook!==null&&!own(HS_QUIZ_BOOKS,p.hsBrowse.currentBook))||(p.hsQuiz.currentBook!==null&&!own(HS_QUIZ_BOOKS,p.hsQuiz.currentBook))||!['batch','unit'].includes(p.hsQuiz.selectionMode)||!['batch','unit'].includes(p.hsQuiz.practiceMode))throw Error('浏览设置不正确');
     for(const item of [p.hsBrowse,p.hsQuiz])if(item.currentUnit!==null&&(!Number.isInteger(item.currentUnit)||!item.currentBook||item.currentUnit<0||item.currentUnit>=HS_QUIZ_BOOKS[item.currentBook].units.length))throw Error('浏览单元位置不正确');
     if(p.scrollY!=null&&(!Number.isFinite(p.scrollY)||p.scrollY<0))throw Error('页面位置不正确');
@@ -64833,7 +65024,7 @@ const Portable = (() => {
   function cleanCancelledRecord(r){
     if(!object(r)||r.cancelled!==true)return r;
     const out={};
-    for(const k of ['id','schema','module','mode','unitKey','label','partName','createdAt','lastAt','endAt','cancelledAt'])if(own(r,k))out[k]=r[k];
+    for(const k of ['id','schema','module','mode','direction','unitKey','label','partName','createdAt','lastAt','endAt','cancelledAt'])if(own(r,k))out[k]=r[k];
     return {...out,total:0,words:[],partial:false,startAt:null,activeMs:0,status:'ended',attempts:[],round:0,visits:[],cancelled:true};
   }
   function cleanTransferData(data){
@@ -64843,8 +65034,8 @@ const Portable = (() => {
   }
   async function envelope(data,metadata){data=cleanTransferData(data);const result={format:FORMAT,version:VERSION,appVersion:APP,dataEpoch:XuehaiDataEpoch.id,exportedAt:Date.now(),vocabulary:clone(vocabulary),metadata:clone(metadata),data};result.checksum=await digest(result);return result;}
   async function validate(file){
-    if(object(file)&&file.format===FORMAT&&(file.version!==VERSION||file.dataEpoch!==XuehaiDataEpoch.id||!/^v(?:6[89]|[7-9]\d|\d{3,})$/.test(file.appVersion||'')))throw Error('这是清理前或其他数据批次的备份，不能恢复到本版。请在对应旧版中查看；本版可导入v68及之后同批次的新备份。');
-    if(!object(file)||file.format!==FORMAT||file.version!==VERSION||!object(file.metadata)||typeof file.metadata.profile!=='string'||typeof file.metadata.head!=='string'||!Array.isArray(file.metadata.ancestors)||file.metadata.ancestors.length>4096||!file.metadata.ancestors.every(v=>typeof v==='string')||typeof file.checksum!=='string')throw Error('文件不是受支持的完整学习备份');
+    if(object(file)&&file.format===FORMAT&&(![5,VERSION].includes(file.version)||file.dataEpoch!==XuehaiDataEpoch.id||!/^v(?:6[89]|[7-9]\d|\d{3,})$/.test(file.appVersion||'')))throw Error('这是清理前或其他数据批次的备份，不能恢复到本版。请在对应旧版中查看；本版可导入v68及之后同批次的新备份。');
+    if(!object(file)||file.format!==FORMAT||![5,VERSION].includes(file.version)||!object(file.metadata)||typeof file.metadata.profile!=='string'||typeof file.metadata.head!=='string'||!Array.isArray(file.metadata.ancestors)||file.metadata.ancestors.length>4096||!file.metadata.ancestors.every(v=>typeof v==='string')||typeof file.checksum!=='string')throw Error('文件不是受支持的完整学习备份');
     const unsigned=clone(file);delete unsigned.checksum;if(await digest(unsigned)!==file.checksum)throw Error('文件校验失败，可能内容不完整或被修改，未导入');
     if(canonical(file.vocabulary)!==canonical(vocabulary))throw Error('备份与当前词库不一致，请使用对应的网页版本');
     if(file.data?.meanings?.version!==2||own(file.data,'historyCleanup'))throw Error('备份的学习数据版本不匹配');
@@ -64852,6 +65043,7 @@ const Portable = (() => {
     if(canonical(cleaned)!==canonical(file.data)){
       file=clone(file);file.data=cleaned;const normalized=clone(file);delete normalized.checksum;file.checksum=await digest(normalized);
     }
+    if(file.version===5 && (Object.values(file.data.examSessions?.sessions||{}).some(s=>s.direction==='zh'||s.translationRule!==undefined)||file.data.records?.some(r=>r.direction==='zh')))throw Error('旧格式不能包含英译中练习，请使用v71及之后的格式6备份');
     dataCheck(file.data);return file;
   }
   function count(data){return {checkinDays:Object.keys(Checkins.derive(data.records,data.checkins).days).length,records:data.records.length,words:Object.values(data.examProgress).concat(Object.values(data.hsProgress)).reduce((n,u)=>n+Object.keys(u.words).length,0),paused:Object.values(data.examSessions.sessions).concat(Object.values(data.hsSessions.sessions)).filter(s=>s.phase!=='done').length};}
@@ -64902,7 +65094,7 @@ const Portable = (() => {
       Checkins.replace(Checkins.derive(data.records,data.checkins));
       await historyReplace(data.records);historyRecords.clear();data.records.forEach(r=>historyRecords.set(r.id,clone(r)));
       const p=data.preferences;
-      if(object(p.exam)){state.mode=p.exam.mode;state.wl=p.exam.wl;state.unitIdx=p.exam.unitIdx;}
+      if(object(p.exam)){state.mode=p.exam.mode;state.wl=p.exam.wl;state.unitIdx=p.exam.unitIdx;PartTranslation.restoreDirections(p.exam.partDirections);}
       if(object(p.hsBrowse)){hsState.currentBook=p.hsBrowse.currentBook;hsState.currentUnit=p.hsBrowse.currentUnit;}
       if(object(p.hsQuiz))for(const key of ['currentBook','currentUnit','wl','selectionMode','practiceMode'])hsQuizState[key]=p.hsQuiz[key];
       localStorage.setItem(PREFS,JSON.stringify(p));
@@ -64942,7 +65134,7 @@ const Portable = (() => {
   function cancelStorageKey(module){return module==='hs'?KEYS.hsSessions:KEYS.examSessions;}
   function matchesCancelledSession(module,key,s){
     const current=module==='hs'?hsSession:examSession;
-    return current&&key===(module==='hs'?hsSessionKey:examSessionKey)(current.unitKey,current.partIndex)&&current.historyId===s.historyId;
+    return current&&key===(module==='hs'?hsSessionKey:examSessionKey)(current.unitKey,current.partIndex,current.direction)&&current.historyId===s.historyId;
   }
   function setCancelPracticePending(pending){
     cancellingPractice=pending;
@@ -64966,7 +65158,7 @@ const Portable = (() => {
     const unit=(module==='hs'?HS_PRACTICE_UNITS:WORDS)[s.unitKey];
     const part=s.partIndex<0?(module==='hs'?'分批练习':'Unit学海练习'):unit.units[s.partIndex]?.name||'整单元';
     cancelSelection={module,key,expected:canonical(s)};cancelTrigger=trigger;
-    document.getElementById('practice-cancel-name').textContent=unit.label+' · '+part;
+    document.getElementById('practice-cancel-name').textContent=unit.label+' · '+part+(PartTranslation.isChinese(s)?' · 英译中':'');
     const message=document.getElementById('practice-cancel-description'),confirm=document.getElementById('practice-cancel-confirm');
     message.textContent='取消后将撤销本次答题、学习进度和打卡贡献。历史仅保留“已取消”，其他练习不受影响。';confirm.disabled=false;
     try{cancellationPlan(module,s);}catch(error){message.textContent=error.message;confirm.disabled=true;}
@@ -65010,7 +65202,7 @@ const Portable = (() => {
   function cancellationPlan(module,s){
     const result=PracticeUndo.plan(module,s,[...historyRecords.values()]),now=Date.now(),unit=(module==='hs'?HS_PRACTICE_UNITS:WORDS)[s.unitKey];
     const id=s.historyId||uuid(),part=s.partIndex<0?'':module==='hs'?'整单元':unit.units[s.partIndex]?.name||'';
-    return {...result,record:{id,schema:1,module,mode:s.partIndex<0?'batch':'full',unitKey:s.unitKey,label:unit.label,partName:part,
+    return {...result,record:{id,schema:1,module,...(PartTranslation.isChinese(s)?{direction:'zh'}:{}),mode:s.partIndex<0?'batch':'full',unitKey:s.unitKey,label:unit.label,partName:part,
       total:0,words:[],partial:false,startAt:null,createdAt:now,lastAt:now,endAt:now,activeMs:0,status:'ended',attempts:[],round:0,visits:[],cancelled:true,cancelledAt:now}};
   }
   function clearCancelledMemory(module){
@@ -65101,7 +65293,7 @@ const Portable = (() => {
     const extra=historyNode('details','','portable-other-sessions'),others=historyNode('div');let othersCount=0;
     function section(module,key,s){
       const unit=(module==='hs'?HS_PRACTICE_UNITS:WORDS)[s.unitKey],part=s.partIndex<0?(module==='hs'?'分批练习':'Unit学海练习'):unit.units[s.partIndex]?.name||'整单元';
-      const section=historyNode('div','','portable-resume');section.append(historyNode('strong',unit.label+' · '+part),historyNode('p',s.phase==='review'?`第 ${s.roundNum} 轮错词回顾，可继续纠错。`:`第 ${s.roundNum} 轮 · 第 ${s.pos+1}/${s.queueIds.length} 词${s.outcome?' · 已判分':!s.portablePause?' · 按原截止时间继续':s.portablePause.remainingMs===null?'':` · 剩余 ${Math.ceil(s.portablePause.remainingMs/1000)} 秒`}`));
+      const section=historyNode('div','','portable-resume');section.append(historyNode('strong',unit.label+' · '+part+(PartTranslation.isChinese(s)?' · 英译中':'')),historyNode('p',s.phase==='review'?`第 ${s.roundNum} 轮错词回顾，可继续纠错。`:`第 ${s.roundNum} 轮 · 第 ${s.pos+1}/${s.queueIds.length} 词${s.outcome?' · 已判分':!s.portablePause?' · 按原截止时间继续':s.portablePause.remainingMs===null?'':` · 剩余 ${Math.ceil(s.portablePause.remainingMs/1000)} 秒`}`));
       section.dataset.module=module;section.dataset.sessionKey=key;
       const actions=historyNode('div','','portable-resume-actions');
       const button=historyNode('button','继续练习');button.type='button';button.onclick=()=>resume(module,key);
@@ -65180,7 +65372,7 @@ const Portable = (() => {
   function restoreView(p){
     MeaningChoices.setMode(p.meaningMode); MeaningChoices.restoreBrowser(p.meaningBrowser);
     window.PageTransitions?.suspend();
-    if(object(p.exam)){state.mode=p.exam.mode;state.wl=p.exam.wl;state.unitIdx=p.exam.unitIdx;}
+    if(object(p.exam)){state.mode=p.exam.mode;state.wl=p.exam.wl;state.unitIdx=p.exam.unitIdx;PartTranslation.restoreDirections(p.exam.partDirections);}
     if(object(p.hsBrowse)){hsState.currentBook=p.hsBrowse.currentBook;hsState.currentUnit=p.hsBrowse.currentUnit;}
     if(object(p.hsQuiz))for(const key of ['currentBook','currentUnit','wl','selectionMode','practiceMode'])hsQuizState[key]=p.hsQuiz[key];
     applying=true;
@@ -65204,7 +65396,7 @@ const Portable = (() => {
   function warm(module,key){
     LocalPageGuard.ensure();
     const store=module==='hs'?hsStore():examStore(),s=store.sessions[key];if(!s||!s.portablePause)return;
-    if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)((module==='hs'?HS_PRACTICE_WORD_BY_ID:EXAM_WORD_BY_ID).get(s.queueIds[s.pos]))*1000;const remaining=s.portablePause.remainingMs??limit;s.deadline=Date.now()+remaining;s.questionStarted=s.deadline-limit;}
+    if(s.phase==='quiz'&&!s.outcome){const limit=(module==='hs'?hsGetTimeLimit:getTimeLimit)((module==='hs'?HS_PRACTICE_WORD_BY_ID:EXAM_WORD_BY_ID).get(s.queueIds[s.pos]),s)*1000;const remaining=s.portablePause.remainingMs??limit;s.deadline=Date.now()+remaining;s.questionStarted=s.deadline-limit;}
     s.autoSuppressed=true;s.autoNextAt=null;delete s.portablePause;localStorage.setItem(module==='hs'?KEYS.hsSessions:KEYS.examSessions,JSON.stringify(store));dirty();
   }
   function resume(module,key){if(busy||fatal)return;const other=module==='hs'?examSession:hsSession;if(other&&other.phase!=='done')pause();warm(module,key);(module==='hs'?hsResumeSession:examResumeSession)(key);renderResume();}
@@ -65653,7 +65845,7 @@ window.XuehaiOffline=(()=>{
     if(!worker)return;
     try{
       const message=await new Promise((resolve,reject)=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();reject(Error('离线状态暂不可读'));},5000);channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data);};worker.postMessage({type:'OFFLINE_STATUS'},[channel.port2]);});
-      if(message.ready&&message.version==='v70')show('ready','已准备好离线使用。首次离线前，请确认这里显示此提示。');
+      if(message.ready&&message.version==='v71')show('ready','已准备好离线使用。首次离线前，请确认这里显示此提示。');
       else show('error','离线准备尚未完成，请联网后重试。');
     }catch(_){show('error','暂时无法确认离线准备状态，请联网后重试。');}
   }
